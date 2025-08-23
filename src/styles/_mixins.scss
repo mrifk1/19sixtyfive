@@ -1,0 +1,62 @@
+@use "variables" as *;
+
+// =====================
+// Breakpoints
+// =====================
+$breakpoints: (
+  "mobile": 1024px,
+);
+
+@mixin respond($breakpoint) {
+  $value: map-get($breakpoints, $breakpoint);
+
+  @if $value {
+    @media (max-width: #{$value}) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint '#{$breakpoint}' not found in $breakpoints.";
+  }
+}
+
+// =====================
+// Hover Underline
+// =====================
+$ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+@mixin hover-underline(
+  $height: 0.05em,
+  $offset: -0.1rem,
+  $duration: 0.4s,
+  $easing: $ease-smooth
+) {
+  position: relative;
+  transition: color 0.3s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: $offset;
+    height: $height;
+    background: $color-primary;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform $duration $easing;
+  }
+
+  &:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  &:not(:hover)::after {
+    transform: scaleX(0);
+    transform-origin: right;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+}

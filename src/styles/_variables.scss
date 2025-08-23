@@ -1,0 +1,39 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Montserrat:wght@500&display=swap");
+
+// Font Variables
+// Desktop Fonts
+$font-desktop-dm-400-52: 400 52px "DM Sans", Arial;
+$font-desktop-dm-400-42: 400 42px "DM Sans", Arial;
+$font-desktop-dm-500-32: 500 32px "DM Sans", Arial;
+$font-desktop-dm-500-21: 500 21px "DM Sans", Arial;
+$font-desktop-dm-400-32: 400 32px "DM Sans", Arial;
+$font-desktop-dm-400-18: 400 18px "DM Sans", Arial;
+$font-desktop-montserrat-500-16: 500 16px/1.6 "Montserrat", Arial;
+
+// Mobile Fonts
+$font-mobile-dm-400-32: 400 32px "DM Sans", Arial;
+$font-mobile-dm-400-20: 400 20px "DM Sans", Arial;
+$font-mobile-dm-500-24: 500 24px "DM Sans", Arial;
+$font-mobile-dm-500-16: 500 16px "DM Sans", Arial;
+$font-mobile-dm-400-14: 400 14px "DM Sans", Arial;
+$font-mobile-dm-500-14: 500 14px "DM Sans", Arial;
+$font-mobile-montserrat-500-12: 500 12px "Montserrat", Arial;
+
+// Color Variables
+$color-primary: #f8f2eb; // Primary color (White)
+$color-secondary: #151515; // Secondary color (Black)
+
+// Additional Color Variables (Accent Colors)
+$color-teal: #305966;
+$color-yellow: #ecb572;
+$color-purple: #71335b;
+$color-red: #b73e31;
+$color-brown: #3e2c26;
+
+// Padding & Margin Variables
+$page-normal: 8rem 4rem;
+$page-extend: 11rem 6rem;
+$section-small: 1rem;
+$section-medium: 2rem;
+$section-large: 3rem;
+$page-mobile-normal: 4rem 2rem;
