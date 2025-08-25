@@ -7,11 +7,12 @@ import Image from "next/image";
 import styles from "../../styles/components/Header.module.scss";
 
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const pathname = usePathname();
-  const isIndex = pathname === "/"; // <— hanya true di halaman root
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [scrolled, setScrolled] = useState<boolean>(false);
+  const pathname = usePathname() || "/";
+  const isIndex = pathname === "/";
 
+  // index-only scroll listener
   useEffect(() => {
     if (!isIndex) return;
     const onScroll = () => setScrolled(window.scrollY > 200);
@@ -22,7 +23,7 @@ export default function Header() {
 
   // lock body scroll saat menu open
   useEffect(() => {
-    const body = document.body;
+    const body = document.body; // HTMLBodyElement
     if (menuOpen) {
       const y = window.scrollY;
       body.style.position = "fixed";
@@ -30,15 +31,17 @@ export default function Header() {
       body.style.left = "0";
       body.style.right = "0";
       body.style.overflow = "hidden";
-      (body as any).dataset.scrollY = String(y);
+      body.dataset.scrollY = String(y);
     } else {
-      const y = Number((document.body as any).dataset.scrollY || 0);
+      const y = Number(document.body.dataset.scrollY ?? "0");
       body.style.position = "";
       body.style.top = "";
       body.style.left = "";
       body.style.right = "";
       body.style.overflow = "";
       window.scrollTo(0, y);
+      // optional: cleanup
+      delete body.dataset.scrollY;
     }
   }, [menuOpen]);
 
@@ -56,7 +59,7 @@ export default function Header() {
       <header
         className={[
           styles.header,
-          styles.sticky, // kalau ada
+          styles.sticky, // kalau ada class ini di SCSS
           isIndex ? styles.index : "",
           scrolled ? styles.scrolled : "",
           menuOpen ? styles.menuActive : "",
@@ -75,6 +78,9 @@ export default function Header() {
           className={[styles.toggle, menuOpen ? styles.active : ""].join(" ")}
           onClick={() => setMenuOpen(true)}
           aria-label="Open menu"
+          aria-controls="main-menu"
+          aria-expanded={menuOpen}
+          type="button"
         >
           <span />
           <span />
@@ -108,52 +114,47 @@ export default function Header() {
           aria-label="Close menu"
           aria-controls="main-menu"
           aria-expanded={menuOpen}
+          type="button"
         >
-          <span></span>
-          <span></span>
-          <span></span>
+          <span />
+          <span />
+          <span />
         </button>
 
         <nav aria-label="Site menu">
           <ul>
             <li>
-              <Link href="/pages/festival" onClick={() => setMenuOpen(false)}>
+              <Link href="/festival" onClick={() => setMenuOpen(false)}>
                 Festivals
               </Link>
             </li>
             <li>
-              <Link href="/pages/community" onClick={() => setMenuOpen(false)}>
+              <Link href="/community" onClick={() => setMenuOpen(false)}>
                 Community
               </Link>
             </li>
             <li>
-              <Link
-                href="/pages/artist-spotlight"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link href="/artist-spotlight" onClick={() => setMenuOpen(false)}>
                 Artist Spotlight
               </Link>
             </li>
             <li>
-              <Link
-                href="/pages/brands-collab"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link href="/brands-collab" onClick={() => setMenuOpen(false)}>
                 Brands Collab
               </Link>
             </li>
             <li>
-              <Link href="/pages/sports" onClick={() => setMenuOpen(false)}>
+              <Link href="/sports" onClick={() => setMenuOpen(false)}>
                 Sports
               </Link>
             </li>
             <li>
-              <Link href="/pages/news" onClick={() => setMenuOpen(false)}>
+              <Link href="/news" onClick={() => setMenuOpen(false)}>
                 News
               </Link>
             </li>
             <li>
-              <Link href="/pages/our-fam" onClick={() => setMenuOpen(false)}>
+              <Link href="/our-fam" onClick={() => setMenuOpen(false)}>
                 Our Fam
               </Link>
             </li>

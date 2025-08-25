@@ -11,7 +11,8 @@ export default function Footer() {
           src="/images/logo-white.svg"
           alt="1965 Logo White"
           width={140}
-          height={60}
+          height={140}
+          className={styles.logoImage}
         />
       </Link>
 
@@ -19,27 +20,27 @@ export default function Footer() {
       <div className={styles.column1}>
         <ul className={`${styles.list} ${styles.left}`}>
           <li>
-            <Link href="/pages/festival">Festivals</Link>
+            <Link href="festival">Festivals</Link>
           </li>
           <li>
-            <Link href="/pages/community">Community</Link>
+            <Link href="community">Community</Link>
           </li>
           <li>
-            <Link href="/pages/artist-spotlight">Artist Spotlight</Link>
+            <Link href="artist-spotlight">Artist Spotlight</Link>
           </li>
           <li>
-            <Link href="/pages/brands-collab">Brands Collab</Link>
+            <Link href="brands-collab">Brands Collab</Link>
           </li>
         </ul>
         <ul className={`${styles.list} ${styles.right}`}>
           <li>
-            <Link href="/pages/sports">Sports</Link>
+            <Link href="sports">Sports</Link>
           </li>
           <li>
-            <Link href="/pages/news">News</Link>
+            <Link href="news">News</Link>
           </li>
           <li>
-            <Link href="/pages/our-fam">Our Fam</Link>
+            <Link href="our-fam">Our Fam</Link>
           </li>
           <li>
             <Link href="#">Youtube</Link>
