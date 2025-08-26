@@ -67,7 +67,7 @@ export default function Header() {
       >
         <Link href="/" className={styles.logo} aria-label="Home">
           <Image
-            src="/images/logo.svg"
+            src="/images/logo/logo.svg"
             alt="1965 logo"
             width={60}
             height={60}
@@ -101,7 +101,7 @@ export default function Header() {
           onClick={() => setMenuOpen(false)}
         >
           <Image
-            src="/images/logo-white.svg"
+            src="/images/logo/logo-white.svg"
             alt="1965 logo white"
             width={90}
             height={90}
@@ -116,7 +116,6 @@ export default function Header() {
           aria-expanded={menuOpen}
           type="button"
         >
-          <span />
           <span />
           <span />
         </button>

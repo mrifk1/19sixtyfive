@@ -2,74 +2,148 @@
 @use "../mixins" as m;
 
 .header {
-  position: fixed;        /* was: sticky */
-  top: 0; left: 0; right: 0;
+  position: fixed; /* was: sticky */
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
   width: 100%;
   height: 6rem;
   padding: 0 $section-medium;
   background-color: $color-primary;
-  display: flex; align-items: center; justify-content: space-between;
-  transition: background-color .3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.3s ease;
 
   &.index {
-    > .logo { opacity: 0; visibility: hidden; transition: opacity .3s ease; }
+    > .logo {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
     &.scrolled,
-    &.menuActive { > .logo { opacity: 1; visibility: visible; } }
+    &.menuActive {
+      > .logo {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
   }
 
-  .logo img { width: 60px; }
+  .logo img {
+    width: 60px;
+  }
 
   .toggle {
-    cursor: pointer; background: transparent; border: 0;
-    width: 1.5rem; height: $section-medium; position: relative;
-    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    width: 1.5rem;
+    height: $section-medium;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     span {
-      position: absolute; left: 0;
-      width: 100%; height: .15rem; border-radius: 2px;
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 0.15rem;
+      border-radius: 2px;
       background-color: $color-secondary;
-      &:nth-child(1){ top: 25%; }
-      &:nth-child(2){ top: 50%; }
-      &:nth-child(3){ top: 75%; }
+      &:nth-child(1) {
+        top: 25%;
+      }
+      &:nth-child(2) {
+        top: 50%;
+      }
+      &:nth-child(3) {
+        top: 75%;
+      }
     }
     &.active span {
       background-color: $color-primary;
-      &:nth-child(1){ top: 50%; transform: rotate(45deg); }
-      &:nth-child(2){ opacity: 0; transform: scale(0); }
-      &:nth-child(3){ top: 50%; transform: rotate(-45deg); }
+      &:nth-child(1) {
+        top: 50%;
+        transform: rotate(45deg);
+      }
+      &:nth-child(2) {
+        opacity: 0;
+        transform: scale(0);
+      }
+      &:nth-child(3) {
+        top: 50%;
+        transform: rotate(-45deg);
+      }
     }
   }
 }
 
 /* overlay menu penuhi layar */
 .menu {
-  position: fixed; inset: 0; z-index: 999;   /* di bawah header (1000) aman */
+  position: fixed;
+  inset: 0;
+  z-index: 1001; /* di atas header (1000) */
   background-color: $color-secondary;
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
   padding: $section-medium;
-  transform: scale(0); transform-origin: top right;
-  transition: transform .3s ease;
-  overflow-y: auto;        /* scroll di dalam menu, bukan body */
+  transform: scale(0);
+  transform-origin: top right;
+  transition: transform 0.3s ease;
+  overflow-y: auto; /* scroll di dalam menu, bukan body */
 
-  &.active { transform: scale(1); }
+  &.active {
+    transform: scale(1);
+  }
 
-  .logo img { width: 90px; }
+  .logo img {
+    width: 90px;
+  }
 
   .close {
-    position: fixed; top: 2rem; right: 2rem;
-    background: transparent; border: 0; display: none;
-    &.active { display: flex; }
-    span { position: absolute; width: 100%; height: .15rem; background: $color-primary; }
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: transparent;
+    border: 0;
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    span {
+      position: absolute;
+      width: 100%;
+      height: 0.15rem;
+      background: $color-primary;
+      border-radius: 2px;
+      
+      &:nth-child(1) {
+        transform: rotate(45deg);
+      }
+      &:nth-child(2) {
+        transform: rotate(-45deg);
+      }
+    }
   }
 
   ul {
-    display: flex; flex-direction: column; list-style: none;
-    margin-left: 12rem; gap: $section-medium;
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin-left: 12rem;
+    gap: $section-medium;
 
     a {
-      color: $color-primary; text-transform: uppercase;
-      font: $font-desktop-dm-400-42; text-decoration: none;
+      color: $color-primary;
+      text-transform: uppercase;
+      font: $font-desktop-dm-400-42;
+      text-decoration: none;
       @include m.hover-underline();
     }
   }
@@ -82,13 +156,30 @@
 
 /* Mobile */
 @include m.respond("mobile") {
-  .header { height: 4rem; .logo img { width: 40px; } }
+  .header {
+    height: 4rem;
+    .logo img {
+      width: 40px;
+    }
+  }
   .menu {
     padding: 1rem 2rem;
-    .logo img { width: 40px; }
-    .close { top: 1rem; right: 1rem; width: 2rem; height: 2rem; }
-    ul { margin-left: 2rem; margin-top: 6rem; gap: 2rem;
-      a { font: $font-mobile-dm-400-20; }
+    .logo img {
+      width: 40px;
+    }
+    .close {
+      top: 1rem;
+      right: 1rem;
+      width: 2rem;
+      height: 2rem;
+    }
+    ul {
+      margin-left: 2rem;
+      margin-top: 6rem;
+      gap: 2rem;
+      a {
+        font: $font-mobile-dm-400-20;
+      }
     }
   }
 }

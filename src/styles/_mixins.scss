@@ -1,15 +1,20 @@
 @use "variables" as *;
-@use 'sass:map';
+@use "sass:map";
 
 // =====================
 // Breakpoints
 // =====================
+// Default assumption:
+// - desktop = base (no media query)
+// - tablet = up to 1280px
+// - mobile = up to 768px
 $breakpoints: (
-  "mobile": 1024px,
+  "tablet": 1280px,
+  "mobile": 768px,
 );
 
 @mixin respond($breakpoint) {
-  $value: map-get($breakpoints, $breakpoint);
+  $value: map.get($breakpoints, $breakpoint);
 
   @if $value {
     @media (max-width: #{$value}) {

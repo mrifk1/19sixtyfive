@@ -8,7 +8,7 @@ export default function Footer() {
       {/* Logo */}
       <Link href="/" className={styles.logo}>
         <Image
-          src="/images/logo-white.svg"
+          src="/images/logo/logo-white.svg"
           alt="1965 Logo White"
           width={140}
           height={140}

@@ -10,6 +10,15 @@ $font-desktop-dm-400-32: 400 32px "DM Sans", Arial;
 $font-desktop-dm-400-18: 400 18px "DM Sans", Arial;
 $font-desktop-montserrat-500-16: 500 16px/1.6 "Montserrat", Arial;
 
+/* Tablet Fonts */
+$font-tablet-dm-400-42: 400 42px "DM Sans", Arial;
+$font-tablet-dm-400-36: 400 36px "DM Sans", Arial;
+$font-tablet-dm-500-28: 500 28px "DM Sans", Arial;
+$font-tablet-dm-500-21: 500 21px "DM Sans", Arial;
+$font-tablet-dm-400-24: 400 24px "DM Sans", Arial;
+$font-tablet-dm-400-18: 400 18px "DM Sans", Arial;
+$font-tablet-montserrat-500-14: 500 14px/1.6 "Montserrat", Arial;
+
 // Mobile Fonts
 $font-mobile-dm-400-32: 400 32px "DM Sans", Arial;
 $font-mobile-dm-400-20: 400 20px "DM Sans", Arial;
@@ -37,3 +46,6 @@ $section-small: 1rem;
 $section-medium: 2rem;
 $section-large: 3rem;
 $page-mobile-normal: 4rem 2rem;
+
+$page-tablet-normal: 6rem 3rem;
+$page-tablet-extend: 9rem 4rem;
