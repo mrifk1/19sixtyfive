@@ -1,41 +1,44 @@
 @use "../styles/variables" as *;
 @use "../styles/mixins" as *;
-/* HERO */
+
+/* ================= HERO ================= */
 .hero {
-  background-color: $color-primary;
-  padding: 4rem 4rem 8rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   gap: $section-medium;
+  padding: 4rem 4rem 8rem;
+  background-color: $color-primary;
 
   img {
     width: 160px;
   }
+
   .heroTitle {
     font: $font-desktop-dm-400-42;
     color: $color-secondary;
   }
+
   .heroText {
-    font: $font-desktop-montserrat-500-16;
     max-width: 26rem;
     margin: 0;
+    font: $font-desktop-montserrat-500-16;
     color: $color-secondary;
   }
 }
 
-/* BANNER */
+/* ================= BANNER ================= */
 .banner {
   position: relative;
-  width: 100%;
-  height: 45rem;
-  background-size: cover;
-  background-position: center;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   overflow: hidden;
+  width: 100%;
+  height: 45rem;
+  background-size: cover;
+  background-position: center;
 
   &.first {
     background-image: url("/images/home/banner-first.png");
@@ -50,6 +53,7 @@
     z-index: 1;
     cursor: pointer;
   }
+
   .bannerOverlay {
     position: absolute;
     inset: 0;
@@ -57,6 +61,7 @@
     background-color: rgba(0, 0, 0, 0);
     transition: background-color 0.3s ease;
   }
+
   .bannerContent {
     position: relative;
     z-index: 3;
@@ -64,19 +69,21 @@
     flex-direction: row;
     align-items: flex-end;
     justify-content: space-between;
-    padding: 5rem;
     gap: 1rem;
+    padding: 5rem;
 
     h2 {
-      color: $color-primary;
-      font: $font-desktop-dm-400-42;
       margin: 0;
-    }
-    .bannerCta {
+      font: $font-desktop-dm-400-42;
       color: $color-primary;
-      font: $font-desktop-dm-400-18;
-      text-decoration: none;
+    }
+
+    .bannerCta {
       position: relative;
+      font: $font-desktop-dm-400-18;
+      color: $color-primary;
+      text-decoration: none;
+
       &::after {
         content: "";
         position: absolute;
@@ -87,6 +94,7 @@
         background: $color-primary;
         transition: width 0.3s ease;
       }
+
       &:hover::after {
         width: 100%;
       }
@@ -97,18 +105,19 @@
   &:focus-within .bannerOverlay {
     background-color: rgba(0, 0, 0, 0.5);
   }
+
   &:hover .bannerCta::after,
   &:focus-within .bannerCta::after {
     width: 100%;
   }
 }
 
-/* FRAME */
+/* ================= FRAME ================= */
 .frame {
   display: flex;
-  padding: $page-extend;
   align-items: center;
   justify-content: flex-start;
+  padding: $page-extend;
   transition: background-color 0.4s ease;
 
   &.first {
@@ -136,6 +145,7 @@
     flex-direction: column;
     width: 100%;
   }
+
   .frameItem {
     position: relative;
     display: flex;
@@ -143,68 +153,87 @@
   }
 
   .left {
+    width: fit-content;
     justify-content: flex-start;
     margin-bottom: 2.5rem;
   }
+
   .right {
     justify-content: flex-end;
     margin-right: 8rem;
     margin-top: -14rem;
     z-index: 2;
+
+    figcaption {
+      position: relative;
+      z-index: 3;
+      width: 35%;
+      margin-left: -8rem;
+      padding: $section-medium;
+    }
   }
 
   .frameImg {
     width: 28rem;
+    aspect-ratio: 1 / 1; /* <-- square */
     overflow: hidden;
   }
+
   .right .frameImg {
     width: 20rem;
+    aspect-ratio: 1 / 1; /* <-- square */
   }
 
   .frameImg img {
-    width: 100%;
     display: block;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     clip-path: polygon(0 0, 100% 0, 100% 87%, 94% 100%, 0 100%);
     cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
   .frameImg img:hover {
     transform: scale(1.1);
   }
 
   figcaption {
-    padding: $section-medium;
-    margin-left: -8rem;
     position: relative;
     z-index: 3;
+    margin-left: -8rem;
+    padding: $section-medium;
   }
+
   figcaption a {
-    color: $color-primary;
     font: $font-desktop-dm-400-42;
+    color: $color-primary;
     text-decoration: none;
     @include hover-underline();
   }
 }
 
-/* BRANDS */
+/* ================= BRANDS ================= */
 .brands {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   gap: 2rem;
   padding: $page-extend;
-  flex-wrap: wrap;
 
   .brandItem {
+    position: relative;
     width: 22rem;
-    position: relative;
   }
+
   .brandLink {
-    display: block;
     position: relative;
-    aspect-ratio: 1/1;
+    display: block;
+    aspect-ratio: 1/1; /* square container */
     overflow: hidden;
   }
+
   .base,
   .hover {
     position: absolute;
@@ -214,6 +243,7 @@
     object-fit: contain;
     transition: opacity 0.3s;
   }
+
   .hover {
     opacity: 0;
   }
@@ -227,7 +257,7 @@
   }
 }
 
-/* RESPONSIVE */
+/* ================= RESPONSIVE ================= */
 @include respond("tablet") {
   .hero {
     padding: 3rem;
@@ -238,10 +268,15 @@
       font: $font-tablet-montserrat-500-14;
     }
   }
+
   .banner {
     height: 42rem;
+
     .bannerContent {
-      padding: 4rem;
+      padding: 3rem 4rem;
+      align-items: flex-end;
+      gap: 0.75rem;
+
       h2 {
         font: $font-tablet-dm-400-36;
       }
@@ -250,12 +285,26 @@
       }
     }
   }
-  .frame .frameImg {
-    width: 22rem;
+
+  .frame {
+    .right {
+      margin-right: 4rem;
+      margin-top: -8rem;
+
+      figcaption {
+        width: 50%;
+        margin-left: -4rem;
+      }
+    }
+
+    .frameImg {
+      width: 22rem;
+    }
+    .right .frameImg {
+      width: 16rem;
+    }
   }
-  .frame .right .frameImg {
-    width: 16rem;
-  }
+
   .brands .brandItem {
     width: 18rem;
   }
@@ -263,7 +312,7 @@
 
 @include respond("mobile") {
   .hero {
-    padding: 2rem;
+    margin-top: -4rem;
     img {
       width: 6rem;
     }
@@ -271,17 +320,23 @@
       font: $font-mobile-dm-400-32;
     }
     .heroText {
+      width: 90%;
       font: $font-mobile-montserrat-500-12;
     }
   }
+
   .banner {
     height: 40rem;
+
     .bannerContent {
       flex-direction: column;
+      align-items: flex-start;
       padding: 25rem 2rem 3rem;
+
       h2 {
         font: $font-mobile-dm-400-20;
       }
+
       .bannerCta {
         font: $font-mobile-dm-400-14;
         text-decoration: underline;
@@ -291,30 +346,62 @@
       }
     }
   }
+
   .frame {
     padding: $page-mobile-normal;
+
     .frameContent {
       gap: $section-large;
     }
-    .frameItem {
-      margin: 0 !important;
-      figcaption a {
-        font: $font-mobile-dm-400-20;
-      }
-      .frameImg {
-        width: 12rem;
+
+    .left figcaption {
+      width: 60%;
+      margin-left: -4rem;
+    }
+
+    .right {
+      margin-left: 4rem !important;
+
+      figcaption {
+        width: 100%;
+        margin-left: -4rem;
       }
     }
+
+    .frameItem {
+      margin: 0;
+    }
+
+    figcaption a {
+      font: $font-mobile-dm-400-20;
+    }
+
+    .frameImg {
+      width: 180px;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+    }
+
     .right .frameImg {
-      width: 9rem;
+      width: 140px !important;
+      aspect-ratio: 1 / 1;
+    }
+
+    .frameImg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
+
   .brands {
     flex-direction: column;
     align-items: center;
+    padding: $page-mobile-normal;
+
     .brandItem {
       width: 12rem;
-      margin-bottom: 2rem;
     }
   }
 }
+

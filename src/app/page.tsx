@@ -39,7 +39,7 @@ export default function HomePage() {
           <h2>
             Common ground:
             <br />
-            Festivals, flipped our way.
+            festivals, flipped our way.
           </h2>
           <Link href="/festival" className={styles.bannerCta}>
             View more
@@ -63,7 +63,7 @@ export default function HomePage() {
               <Link href="/community">
                 The community:
                 <br />
-                Same series, fresh takes.
+                same series, fresh takes.
               </Link>
             </figcaption>
           </figure>
@@ -81,7 +81,7 @@ export default function HomePage() {
               <Link href="/artist-spotlight">
                 Artist spotlight:
                 <br />
-                For the love of live.
+                for the love of live.
               </Link>
             </figcaption>
           </figure>
@@ -100,7 +100,7 @@ export default function HomePage() {
           <h2>
             Wanting in:
             <br />
-            Because we get it
+            because we get it
           </h2>
           <Link href="/brands-collab" className={styles.bannerCta}>
             View more
@@ -124,7 +124,7 @@ export default function HomePage() {
               <Link href="/sports">
                 Play nice:
                 <br />
-                Where sport gets style.
+                where sport gets style.
               </Link>
             </figcaption>
           </figure>
@@ -142,7 +142,7 @@ export default function HomePage() {
               <Link href="/news">
                 News front:
                 <br />
-                Not just press but with punch.
+                not just press but with punch.
               </Link>
             </figcaption>
           </figure>
