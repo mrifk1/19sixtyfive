@@ -1,0 +1,128 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import styles from "./Collections.module.scss";
+
+import { asKind, getCollection, hrefOf, pickHover } from "@/lib/api";
+import type { CollectionItem, CollectionKind } from "@/types";
+import { notFound } from "next/navigation";
+
+export const revalidate = 3600;
+
+const UI: Record<
+  CollectionKind,
+  {
+    titleLines: string[];
+    icon: string;
+    subtitle: string;
+    frameClass:
+      | "frameFestival"
+      | "frameCommunity"
+      | "frameArtist"
+      | "frameSports";
+    variant: "frameWhite" | "frameBlack";
+  }
+> = {
+  festival: {
+    titleLines: ["Common ground:", "Festivals, flipped our way."],
+    icon: "/images/festivals/Festivals Icon.svg",
+    subtitle:
+      "We don’t just build festivals — we build movements, moments and the kind of subculture people want to belong to.",
+    frameClass: "frameFestival",
+    variant: "frameWhite",
+  },
+  community: {
+    titleLines: ["The community:", "Same series, fresh takes."],
+    icon: "/images/community/Community Icon.svg",
+    subtitle:
+      "Intimate but unexpected, our sessions bring artists, collaborators and creatives together for shared sparks and surprise moments.",
+    frameClass: "frameCommunity",
+    variant: "frameBlack",
+  },
+  artist: {
+    titleLines: ["Artist spotlight:", "Where craft meets crowd."],
+    icon: "/images/artist-spotlight/Artist Spotlight Icon.svg",
+    subtitle: "Spotlights that feel personal, polished, and perfectly placed.",
+    frameClass: "frameArtist",
+    variant: "frameBlack",
+  },
+  sport: {
+    titleLines: ["Sports:", "Energy in motion."],
+    icon: "/images/sports/Sports Icon.svg",
+    subtitle: "Live formats built to move people — and culture — forward.",
+    frameClass: "frameSports",
+    variant: "frameBlack",
+  },
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { collection: string };
+}): Promise<Metadata> {
+  const kind = asKind(params.collection);
+  if (!kind) return { title: "Not Found" };
+  const ttl = kind[0].toUpperCase() + kind.slice(1);
+  return {
+    title: `${ttl} | 19sixtyfive`,
+    alternates: { canonical: `/${params.collection}` },
+  };
+}
+
+export default async function ListPage({
+  params,
+}: {
+  params: { collection: string };
+}) {
+  const raw = params.collection; // e.g. "artist-spotlight" / "sports"
+  const kind = asKind(raw);
+  if (!kind) return notFound();
+
+  const ui = UI[kind];
+  const items = await getCollection(kind);
+
+  return (
+    <>
+      <section className={styles.heroTitle}>
+        <h1>
+          {ui.titleLines[0]}
+          <br />
+          {ui.titleLines[1]}
+        </h1>
+      </section>
+
+      {/* hero background via CSS class; gunakan raw agar match .hero-artist-spotlight/.hero-sports */}
+      <section className={`${styles.heroImg} ${styles[`hero-${raw}`]}`} />
+
+      <section className={styles.heroSubtitle}>
+        <Image src={ui.icon} alt={`${kind} icon`} width={90} height={90} />
+        <p>{ui.subtitle}</p>
+      </section>
+
+      <section
+        className={`${styles.frame} ${styles[ui.frameClass]} ${
+          styles[ui.variant]
+        }`}
+      >
+        <article className={styles.frameContent}>
+          {items.map((it: CollectionItem) => (
+            <figure key={it.id} className={styles.frameItem}>
+              <div className={styles.frameImg}>
+                <Image
+                  src={pickHover(it.image_hover ?? null)}
+                  alt={it.title ?? "Untitled"}
+                  width={350}
+                  height={350}
+                  sizes="(max-width:768px) 140px, 350px"
+                />
+              </div>
+              <figcaption>
+                <Link href={hrefOf(kind, it)}>{it.title ?? "Untitled"}</Link>
+              </figcaption>
+            </figure>
+          ))}
+        </article>
+      </section>
+    </>
+  );
+}

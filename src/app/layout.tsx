@@ -4,8 +4,9 @@ import Footer from "./components/footer";
 import Header from "./components/header";
 
 export const metadata: Metadata = {
-  title: "19SixtyFive",
-  description: "Next.js + SCSS Setup",
+  title: "19sixtyfive",
+  description: "Experiences flipped our way.",
+  metadataBase: new URL("https://19sixtyfive.com.sg"),
 };
 
 export default function RootLayout({

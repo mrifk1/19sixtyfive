@@ -20,27 +20,27 @@ export default function Footer() {
       <div className={styles.column1}>
         <ul className={`${styles.list} ${styles.left}`}>
           <li>
-            <Link href="festival">Festivals</Link>
+            <Link href="/festival">Festivals</Link>
           </li>
           <li>
-            <Link href="community">Community</Link>
+            <Link href="/community">Community</Link>
           </li>
           <li>
-            <Link href="artist-spotlight">Artist Spotlight</Link>
+            <Link href="/artist-spotlight">Artist Spotlight</Link>
           </li>
           <li>
-            <Link href="brands-collab">Brands Collab</Link>
+            <Link href="/brands-collab">Brands Collab</Link>
           </li>
         </ul>
         <ul className={`${styles.list} ${styles.right}`}>
           <li>
-            <Link href="sports">Sports</Link>
+            <Link href="/sports">Sports</Link>
           </li>
           <li>
-            <Link href="news">News</Link>
+            <Link href="/news">News</Link>
           </li>
           <li>
-            <Link href="our-fam">Our Fam</Link>
+            <Link href="/our-fam">Our Fam</Link>
           </li>
           <li>
             <Link href="#">Youtube</Link>
@@ -70,17 +70,17 @@ export default function Footer() {
       {/* Column 3 */}
       <ul className={styles.column3}>
         <li>
-          <a href="https://24owls.sg/" target="_blank">
+          <a href="https://24owls.sg/" target="_blank" rel="noopener noreferrer">
             24owls.sg
           </a>
         </li>
         <li>
-          <a href="https://sixtyfive.sg/" target="_blank">
+          <a href="https://sixtyfive.sg/" target="_blank" rel="noopener noreferrer">
             sixtyfive.sg
           </a>
         </li>
         <li>
-          <a href="https://tangentmoves.sg/" target="_blank">
+          <a href="https://tangentmoves.sg/" target="_blank" rel="noopener noreferrer">
             tangentmoves.sg
           </a>
         </li>

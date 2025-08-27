@@ -1,13 +1,9 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   images: {
-    // whitelist domain gambar eksternal
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "wp.19sixtyfive.com.sg",
-      },
+      { protocol: "https", hostname: "wp.19sixtyfive.com.sg", pathname: "/**" },
     ],
   },
   reactStrictMode: true,
