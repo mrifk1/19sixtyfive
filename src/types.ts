@@ -43,3 +43,44 @@ export interface PaginatedResponse<T> {
   per_page: number;
   total_pages: number;
 }
+
+// --- brands ---
+export interface BrandItem {
+  id: string;
+  title?: string | null;
+  slug?: string | null;
+  excerpt?: string | null;
+  image_hover?: DeviceImage | null;
+  image_banner?: DeviceImage | null;
+  status?: string | null;
+  display_order?: string | number | null;
+}
+
+export interface BrandProject {
+  id: string;
+  brand_id: string;
+  title?: string | null;
+  slug?: string | null;
+  description?: string | null;
+  website_link?: string | null;
+
+  image_hover?: DeviceImage | null;
+  image_hero?: DeviceImage | null;
+  image_logo?: DeviceImage | null;
+  image_1?: DeviceImage | null;
+  image_2?: DeviceImage | null;
+  image_banner?: DeviceImage | null;
+
+  // optional gallery 1..8
+  image_gallery_1?: DeviceImage | null;
+  image_gallery_2?: DeviceImage | null;
+  image_gallery_3?: DeviceImage | null;
+  image_gallery_4?: DeviceImage | null;
+  image_gallery_5?: DeviceImage | null;
+  image_gallery_6?: DeviceImage | null;
+  image_gallery_7?: DeviceImage | null;
+  image_gallery_8?: DeviceImage | null;
+
+  display_order?: string | number | null;
+  status?: string | null;
+}

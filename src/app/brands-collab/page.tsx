@@ -1,3 +1,5 @@
-export default function BrandsPlaceholder() {
-  return <div style={{padding:'4rem'}}>Brands Collab page coming soon.</div>;
+import { redirect } from "next/navigation";
+
+export default function BrandsCollabRedirect() {
+  redirect("/brands");
 }
