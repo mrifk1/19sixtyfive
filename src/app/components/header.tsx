@@ -21,7 +21,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [isIndex]);
 
-  // lock body scroll saat menu open
+  // lock body scroll when menu is open
   useEffect(() => {
     const body = document.body; // HTMLBodyElement
     if (menuOpen) {
@@ -45,7 +45,7 @@ export default function Header() {
     }
   }, [menuOpen]);
 
-  // tutup dengan Escape
+  // close with Escape key
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setMenuOpen(false);
@@ -59,7 +59,7 @@ export default function Header() {
       <header
         className={[
           styles.header,
-          styles.sticky, // kalau ada class ini di SCSS
+          styles.sticky, // if this class exists in SCSS
           isIndex ? styles.index : "",
           scrolled ? styles.scrolled : "",
           menuOpen ? styles.menuActive : "",

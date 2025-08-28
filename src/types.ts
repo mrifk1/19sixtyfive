@@ -84,3 +84,24 @@ export interface BrandProject {
   display_order?: string | number | null;
   status?: string | null;
 }
+
+// ---------- NEWS ----------
+export type NewsItem = {
+  id: string;
+  title: string;
+  slug: string | null;
+  website_link?: string | null;
+  media_name?: string | null;
+  artist?: string | null;
+  publish_date?: string | null; // e.g. "2025-08-22"
+  category_name?: string | null;
+  category_slug?: string | null;
+};
+
+export type NewsResponse = {
+  items: NewsItem[];
+  total: number;
+  page: number;
+  per_page: number;
+  total_pages: number;
+};

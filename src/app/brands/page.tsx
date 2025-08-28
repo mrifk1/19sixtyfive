@@ -29,15 +29,10 @@ export default async function BrandsPage() {
       <section className={`${styles.heroImg} ${styles.heroBrands}`} />
 
       <section className={styles.heroSubtitle}>
-        <Image
-          src="/images/brands-collab/Brands Collab Icon.svg"
-          alt="Brands"
-          width={90}
-          height={90}
-        />
+        <h1>Brands Collaboration</h1>
         <p>
-          Collaborations that actually mean something — built for culture, not
-          just campaigns.
+          Brands work with us when they’re done whispering — and ready to cut
+          through, stand out, and stir things up.
         </p>
       </section>
 

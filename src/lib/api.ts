@@ -6,13 +6,20 @@ import type {
   PaginatedResponse,
   BrandItem,
   BrandProject,
-} from "../types";
+  NewsItem,
+} from "@/types";
 
-/* ===================== ENV ===================== */
+/**
+ * Env
+ * - API_BASE_URL=https://wp.19sixtyfive.com.sg/wp-json/custom/v1
+ * - API_KEY=xxxxx
+ */
 const BASE_URL = process.env.API_BASE_URL!;
 const API_KEY = process.env.API_KEY!;
 
-/* ===================== Utils ===================== */
+/* ==============================
+ * Utils
+ * ============================== */
 export function slugify(input?: string | null): string {
   return (input ?? "")
     .toString()
@@ -23,39 +30,54 @@ export function slugify(input?: string | null): string {
     .replace(/^-+|-+$/g, "");
 }
 
-/* ===================== Fetch wrapper ===================== */
-export async function apiGet<T>(path: string, revalidate = 3600): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`, {
+/* ==============================
+ * Fetch wrapper (ISR + Tag-based)
+ * ============================== */
+type GetOpts = { revalidate?: number; tags?: string[] };
+
+export async function apiGet<T>(path: string, opts: GetOpts = {}): Promise<T> {
+  const { revalidate = 3600, tags = [] } = opts; // default 1h
+  const isDev = process.env.NODE_ENV !== "production";
+  const url = path.startsWith("http") ? path : `${BASE_URL}${path}`;
+
+  const res = await fetch(url, {
     method: "GET",
     headers: { Accept: "application/json", "X-API-Key": API_KEY },
-    next: { revalidate },
-    cache: "force-cache",
+    // Dev: always fresh; Prod: ISR + Tags
+    next: isDev ? { revalidate: 0 } : { revalidate, tags },
+    cache: isDev ? "no-store" : "force-cache",
   });
+
   if (!res.ok) {
-    throw new Error(`GET ${path} failed: ${res.status}`);
+    throw new Error(`GET ${url} failed: ${res.status} ${res.statusText}`);
   }
   return res.json() as Promise<T>;
 }
 
-/* ===================== Collections (4 modules) ===================== */
-const MAP: Record<string, CollectionKind> = {
+/* ==============================
+ * Collections (festival/community/artist/sport)
+ * ============================== */
+const KIND_MAP: Record<string, CollectionKind> = {
   festival: "festival",
   community: "community",
   artist: "artist",
-  "artist-spotlight": "artist", // alias in URL
+  "artist-spotlight": "artist", // alias
   sport: "sport",
-  sports: "sport", // alias in URL
+  sports: "sport", // alias
 };
 
-export function asKind(segment: string): CollectionKind | null {
-  return MAP[segment] ?? null;
+export function asKind(s: string): CollectionKind | null {
+  return KIND_MAP[s] ?? null;
 }
 
 export async function getCollection(kind: string): Promise<CollectionItem[]> {
   const k = asKind(kind);
-  if (!k) return []; // guard unknown
+  if (!k) return [];
   try {
-    const data = await apiGet<PaginatedResponse<CollectionItem>>(`/${k}`, 3600);
+    const data = await apiGet<PaginatedResponse<CollectionItem>>(`/${k}`, {
+      revalidate: 3600,
+      tags: ["collections", `collections:${k}`],
+    });
     return Array.isArray(data.items) ? data.items : [];
   } catch {
     return [];
@@ -67,9 +89,10 @@ export async function getItemBySlug(
   slug: string
 ): Promise<CollectionItem | null> {
   const list = await getCollection(kind);
-  const direct = list.find((x) => (x.slug ?? "") === slug || x.id === slug);
-  if (direct) return direct;
-  return list.find((x) => slugify(x.title) === slug) ?? null;
+  const bySlug =
+    list.find((x) => (x.slug ?? "") === slug || x.id === slug) ??
+    list.find((x) => slugify(x.title) === slug);
+  return bySlug ?? null;
 }
 
 export function orderByDisplay(items: CollectionItem[]): CollectionItem[] {
@@ -97,73 +120,51 @@ export function hrefOf(kind: string, it: CollectionItem) {
   return `/${kind}/${encodeURIComponent(String(s))}`;
 }
 
-/* ===================== Images & placeholders ===================== */
+/* ==============================
+ * Image helpers (desktop vs mobile + placeholders)
+ * ============================== */
+/** All placeholders are directed to one file to avoid 404 errors. */
+const FALLBACK = "/images/placeholders/placeholder.png";
 export const PLACEHOLDER = {
-  hero: "/images/placeholders/placeholder-hero.jpg",
-  logo: "/images/placeholders/placeholder-logo.png",
-  square: "/images/placeholders/placeholder-square.jpg",
-  banner: "/images/placeholders/placeholder-banner.jpg",
-  thumb: "/images/placeholders/placeholder-thumb.jpg",
+  hero: FALLBACK,
+  logo: FALLBACK,
+  square: FALLBACK,
+  banner: FALLBACK,
+  thumb: FALLBACK,
 };
 
-// Aliases to keep pages consistent with other modules
-export const pickBrandThumb = (img?: DeviceImage | null) =>
-  pickImageSrc(img, "desktop", PLACEHOLDER.thumb);
-
-export const pickProjectHero = (img?: DeviceImage | null, isMobile = false) =>
-  pickHero(img, isMobile);
-
-export const pickProjectLogo = (img?: DeviceImage | null) => pickLogo(img);
-
-export const pickProjectBanner = (img?: DeviceImage | null, isMobile = false) =>
-  pickBanner(img, isMobile);
-
-// return the first available URL from DeviceImage (no placeholder here)
-function pickFromDevice(
+export function pickImageSrc(
   img?: DeviceImage | null,
   prefer: "desktop" | "mobile" = "desktop"
-): string | null {
-  if (!img) return null;
+): string {
+  if (!img) return PLACEHOLDER.square;
   const primary = img[prefer];
   if (primary) return primary;
   const alt = prefer === "desktop" ? img.mobile : img.desktop;
   if (alt) return alt;
-  if (img.thumbnail) return img.thumbnail;
-  return null;
-}
-
-/**
- * Generic picker with specific placeholder fallback (default = square).
- * Accepts null/undefined.
- */
-export function pickImageSrc(
-  img?: DeviceImage | null,
-  prefer: "desktop" | "mobile" = "desktop",
-  placeholder: string = PLACEHOLDER.square
-): string {
-  return pickFromDevice(img, prefer) ?? placeholder;
+  return img.thumbnail ?? PLACEHOLDER.square;
 }
 
 export const pickHero = (img?: DeviceImage | null, isMobile = false) =>
-  pickImageSrc(img, isMobile ? "mobile" : "desktop", PLACEHOLDER.hero);
-
+  pickImageSrc(img, isMobile ? "mobile" : "desktop") || PLACEHOLDER.hero;
 export const pickLogo = (img?: DeviceImage | null) =>
-  pickImageSrc(img, "desktop", PLACEHOLDER.logo);
-
+  pickImageSrc(img, "desktop") || PLACEHOLDER.logo;
 export const pickHover = (img?: DeviceImage | null) =>
-  pickImageSrc(img, "desktop", PLACEHOLDER.thumb);
-
+  pickImageSrc(img, "desktop") || PLACEHOLDER.thumb;
 export const pickBanner = (img?: DeviceImage | null, isMobile = false) =>
-  pickImageSrc(img, isMobile ? "mobile" : "desktop", PLACEHOLDER.banner);
+  pickImageSrc(img, isMobile ? "mobile" : "desktop") || PLACEHOLDER.banner;
 
-/* ===================== Brands ===================== */
-const BRAND_BASE = `/brand`;
-const BRAND_DETAIL_BASE = `/brand-detail`;
+/* ==============================
+ * Brands (+ projects)
+ * ============================== */
+const BRAND_BASE = "/brand";
+const BRAND_DETAIL_BASE = "/brand-detail";
 
 export function hrefBrand(b: BrandItem) {
   const s = b.slug || slugify(b.title) || b.id;
   return `/brands/${encodeURIComponent(String(s))}`;
 }
+
 export function hrefProject(b: BrandItem, p: BrandProject) {
   const bs = b.slug || slugify(b.title) || b.id;
   const ps = p.slug || slugify(p.title) || p.id;
@@ -173,24 +174,39 @@ export function hrefProject(b: BrandItem, p: BrandProject) {
 }
 
 export async function getBrands(): Promise<BrandItem[]> {
-  const res = await apiGet<{ items: BrandItem[] }>(BRAND_BASE, 3600);
-  return Array.isArray(res.items) ? res.items : [];
+  try {
+    const res = await apiGet<{ items: BrandItem[] }>(BRAND_BASE, {
+      revalidate: 3600,
+      tags: ["brands"],
+    });
+    return Array.isArray(res.items) ? res.items : [];
+  } catch {
+    return [];
+  }
 }
 
 export async function getBrandBySlug(slug: string): Promise<BrandItem | null> {
   const list = await getBrands();
-  const direct = list.find((b) => (b.slug ?? "") === slug || b.id === slug);
-  if (direct) return direct;
-  return list.find((b) => slugify(b.title) === slug) ?? null;
+  const direct =
+    list.find((b) => (b.slug ?? "") === slug || b.id === slug) ??
+    list.find((b) => slugify(b.title) === slug);
+  return direct ?? null;
 }
 
 export async function getBrandProjects(
   brandId: string
 ): Promise<BrandProject[]> {
-  // FE filter jika BE belum support query param
-  const res = await apiGet<{ items: BrandProject[] }>(BRAND_DETAIL_BASE, 3600);
-  const items = Array.isArray(res.items) ? res.items : [];
-  return items.filter((p) => String(p.brand_id) === String(brandId));
+  try {
+    // FE filter if BE doesn't support ?brand_id= yet
+    const res = await apiGet<{ items: BrandProject[] }>(BRAND_DETAIL_BASE, {
+      revalidate: 3600,
+      tags: ["brand-projects", `brand:${brandId}`],
+    });
+    const items = Array.isArray(res.items) ? res.items : [];
+    return items.filter((p) => String(p.brand_id) === String(brandId));
+  } catch {
+    return [];
+  }
 }
 
 export async function getProjectBySlug(
@@ -198,9 +214,10 @@ export async function getProjectBySlug(
   slug: string
 ): Promise<BrandProject | null> {
   const items = await getBrandProjects(brandId);
-  const direct = items.find((p) => (p.slug ?? "") === slug || p.id === slug);
-  if (direct) return direct;
-  return items.find((p) => slugify(p.title) === slug) ?? null;
+  const direct =
+    items.find((p) => (p.slug ?? "") === slug || p.id === slug) ??
+    items.find((p) => slugify(p.title) === slug);
+  return direct ?? null;
 }
 
 export function orderProjects(items: BrandProject[]) {
@@ -208,10 +225,50 @@ export function orderProjects(items: BrandProject[]) {
     (a, b) => Number(a.display_order ?? 0) - Number(b.display_order ?? 0)
   );
 }
+
 export function prevNextProject(list: BrandProject[], current: BrandProject) {
   const idx = list.findIndex((x) => x.id === current.id);
-  if (idx < 0) return null as null;
+  if (idx < 0) return null;
   const prev = list[(idx - 1 + list.length) % list.length];
   const next = list[(idx + 1) % list.length];
   return { prev, next };
+}
+
+// Brand image pickers
+export const pickBrandThumb = (img?: DeviceImage | null) =>
+  pickImageSrc(img, "desktop");
+export const pickProjectHero = (img?: DeviceImage | null) => pickHero(img);
+export const pickProjectLogo = (img?: DeviceImage | null) => pickLogo(img);
+export const pickProjectBanner = (img?: DeviceImage | null) => pickBanner(img);
+
+/* ==============================
+ * News (list only, no detail)
+ * ============================== */
+export async function getNews(): Promise<NewsItem[]> {
+  try {
+    const res = await apiGet<{ items: NewsItem[] }>("/news", {
+      revalidate: 3600,
+      tags: ["news"],
+    });
+    return Array.isArray(res.items) ? res.items : [];
+  } catch {
+    return [];
+  }
+}
+
+export function buildNewsFilters(items: NewsItem[]) {
+  // Group by category_slug (fallback "all")
+  const map = new Map<string, { slug: string; name: string; count: number }>();
+  for (const it of items) {
+    const slug = (it.category_slug ?? "all").toLowerCase();
+    const name = it.category_name ?? (slug === "all" ? "All" : slug);
+    if (!map.has(slug)) map.set(slug, { slug, name, count: 0 });
+    map.get(slug)!.count++;
+  }
+  // Ensure "all" exists with full count
+  const total = items.length;
+  map.set("all", { slug: "all", name: "All", count: total });
+  return Array.from(map.values()).sort((a, b) =>
+    a.slug === "all" ? -1 : b.slug === "all" ? 1 : a.name.localeCompare(b.name)
+  );
 }

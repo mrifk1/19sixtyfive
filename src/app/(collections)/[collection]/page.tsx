@@ -13,7 +13,8 @@ const UI: Record<
   CollectionKind,
   {
     titleLines: string[];
-    icon: string;
+    icon?: string; // <— optional
+    iconLabel?: string; // <— optional
     subtitle: string;
     frameClass:
       | "frameFestival"
@@ -25,7 +26,7 @@ const UI: Record<
 > = {
   festival: {
     titleLines: ["Common ground:", "Festivals, flipped our way."],
-    icon: "/images/festivals/Festivals Icon.svg",
+    icon: "/images/festivals/icon.svg",
     subtitle:
       "We don’t just build festivals — we build movements, moments and the kind of subculture people want to belong to.",
     frameClass: "frameFestival",
@@ -33,7 +34,7 @@ const UI: Record<
   },
   community: {
     titleLines: ["The community:", "Same series, fresh takes."],
-    icon: "/images/community/Community Icon.svg",
+    icon: "/images/community/icon.svg",
     subtitle:
       "Intimate but unexpected, our sessions bring artists, collaborators and creatives together for shared sparks and surprise moments.",
     frameClass: "frameCommunity",
@@ -41,17 +42,17 @@ const UI: Record<
   },
   artist: {
     titleLines: ["Artist spotlight:", "Where craft meets crowd."],
-    icon: "/images/artist-spotlight/Artist Spotlight Icon.svg",
-    subtitle: "Spotlights that feel personal, polished, and perfectly placed.",
+    iconLabel: "Artist Spotlight",
+    subtitle: "From indie pop to rock, classical and everything in between — we curate concerts that don’t just fill a room, they fill a feeling.",
     frameClass: "frameArtist",
-    variant: "frameBlack",
+    variant: "frameWhite",
   },
   sport: {
     titleLines: ["Sports:", "Energy in motion."],
-    icon: "/images/sports/Sports Icon.svg",
-    subtitle: "Live formats built to move people — and culture — forward.",
+    iconLabel: "Sports",
+    subtitle: "We turn spaces into charged fan zones, where courts become culture and athletes feel close enough to touch.",
     frameClass: "frameSports",
-    variant: "frameBlack",
+    variant: "frameWhite",
   },
 };
 
@@ -74,7 +75,7 @@ export default async function ListPage({
 }: {
   params: { collection: string };
 }) {
-  const raw = params.collection; // e.g. "artist-spotlight" / "sports"
+  const raw = params.collection;
   const kind = asKind(raw);
   if (!kind) return notFound();
 
@@ -91,11 +92,16 @@ export default async function ListPage({
         </h1>
       </section>
 
-      {/* hero background via CSS class; gunakan raw agar match .hero-artist-spotlight/.hero-sports */}
       <section className={`${styles.heroImg} ${styles[`hero-${raw}`]}`} />
 
       <section className={styles.heroSubtitle}>
-        <Image src={ui.icon} alt={`${kind} icon`} width={90} height={90} />
+        {ui.icon ? (
+          <Image src={ui.icon} alt={`${kind} icon`} width={90} height={90} />
+        ) : (
+          <span className={styles.iconText} aria-label={`${kind} icon`}>
+            {ui.iconLabel ?? kind}
+          </span>
+        )}
         <p>{ui.subtitle}</p>
       </section>
 
@@ -113,7 +119,6 @@ export default async function ListPage({
                   alt={it.title ?? "Untitled"}
                   width={350}
                   height={350}
-                  sizes="(max-width:768px) 140px, 350px"
                 />
               </div>
               <figcaption>

@@ -81,11 +81,11 @@
   }
 }
 
-/* overlay menu penuhi layar */
+/* overlay menu fills the screen */
 .menu {
   position: fixed;
   inset: 0;
-  z-index: 1001; /* di atas header (1000) */
+  z-index: 1001; /* above header (1000) */
   background-color: $color-secondary;
   display: flex;
   flex-direction: column;
@@ -93,7 +93,7 @@
   transform: scale(0);
   transform-origin: top right;
   transition: transform 0.3s ease;
-  overflow-y: auto; /* scroll di dalam menu, bukan body */
+  overflow-y: auto; /* scroll inside menu, not body */
 
   &.active {
     transform: scale(1);
@@ -149,7 +149,7 @@
   }
 }
 
-/* beri ruang konten di bawah header fixed */
+/* give space for content below fixed header */
 .pageOffset {
   height: 6rem;
 }

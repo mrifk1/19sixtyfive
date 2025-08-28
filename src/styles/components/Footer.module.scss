@@ -10,9 +10,21 @@
   padding: 8rem 6rem 6rem;
   font: $font-desktop-dm-400-18;
 
-  .logo img { width: 140px; }
+  .logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    img {
+      width: 140px;
+    }
+  }
 
-  ul, p { list-style: none; margin: 0; padding: 0; }
+  ul,
+  p {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 
   .column1 {
     display: flex;
@@ -53,24 +65,39 @@
     gap: $section-large;
     font: $font-mobile-dm-400-14;
 
-    .logo img { width: 60px; }
+    .logo img {
+      width: 60px;
+      height: auto;
+    }
 
     .column1 {
       height: auto;
-      .list { gap: $section-medium; }
-      .logo img { width: 80px; }
+      .list {
+        gap: $section-medium;
+      }
+      .logo img {
+        width: 80px;
+      }
     }
 
-    .column2 { gap: $section-large; }
+    .column2 {
+      gap: $section-large;
+    }
 
     .column3 {
       flex-direction: row;
       justify-content: space-between;
       width: 100%;
       li {
-        &:nth-child(1) { order: 1; }
-        &:nth-child(2) { order: 3; }
-        &:nth-child(3) { order: 2; }
+        &:nth-child(1) {
+          order: 1;
+        }
+        &:nth-child(2) {
+          order: 3;
+        }
+        &:nth-child(3) {
+          order: 2;
+        }
       }
     }
   }

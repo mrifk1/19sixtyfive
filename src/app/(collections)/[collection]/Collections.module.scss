@@ -23,16 +23,16 @@
 }
 /* per-route background (pakai "raw" segment) */
 .hero-festival {
-  background-image: url("/images/festivals/IMG-Festival-Main-Banner.png");
+  background-image: url("/images/festivals/hero.png");
 }
 .hero-community {
-  background-image: url("/images/community/Community Hero Image.png");
+  background-image: url("/images/community/hero.png");
 }
 .hero-artist-spotlight {
-  background-image: url("/images/artist-spotlight/Artist Spotlight Hero Image.png");
+  background-image: url("/images/artist-spotlight/hero.png");
 }
 .hero-sports {
-  background-image: url("/images/sports/Sports Hero Image.png");
+  background-image: url("/images/sports/hero.png");
 }
 
 .heroSubtitle {
@@ -48,7 +48,12 @@
   :global(img) {
     width: 90px;
     height: auto;
-  } /* next/image outputs <img> */
+  }
+}
+
+.iconText {
+  font: $font-desktop-dm-500-32;
+  color: $color-secondary;
 }
 
 .frame {
@@ -72,14 +77,14 @@
 .frameWhite {
   --frame-text-color: #{$color-primary};
   --frame-border: #{$color-primary};
-  --arrow-icon: url("/images/logo-icons/Arrow%20Icon.svg");
-  --arrow-icon-hover: url("/images/logo-icons/Arrow%20Icon-Hover.svg");
+  --arrow-icon: url("/images/icon/arrow.svg");
+  --arrow-icon-hover: url("/images/icon/arrow-hover.svg");
 }
 .frameBlack {
   --frame-text-color: #{$color-secondary};
   --frame-border: #{$color-secondary};
-  --arrow-icon: url("/images/logo-icons/Black%20Arrow%20Icon.svg");
-  --arrow-icon-hover: url("/images/logo-icons/Black%20Arrow%20Icon-Hover.svg");
+  --arrow-icon: url("/images/icon/arrow-black.svg");
+  --arrow-icon-hover: url("/images/icon/arrow-black-hover.svg");
 }
 
 .frameContent {
@@ -93,6 +98,7 @@
   position: relative;
   align-items: center;
   border-bottom: 0.2rem solid var(--frame-border);
+  
   .frameImg {
     position: absolute;
     right: 16rem;

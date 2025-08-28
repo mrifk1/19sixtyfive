@@ -7,6 +7,7 @@ import {
   getBrandBySlug,
   getBrandProjects,
   pickBrandThumb,
+  pickBanner,
   hrefProject,
 } from "@/lib/api";
 import { notFound } from "next/navigation";
@@ -37,19 +38,27 @@ export default async function BrandDetailPage({
 
   const projects = await getBrandProjects(brand.id);
 
+  const hero = pickBanner(brand.image_banner);
+
   return (
     <>
-      <section className={styles.brandHero}>
-        <h1 className={styles.brandTitle}>{brand.title ?? "Untitled"}</h1>
-        {brand.excerpt ? <p>{brand.excerpt}</p> : null}
+      <section
+        className={styles.heroSection}
+        style={{ backgroundImage: `url(${hero})` }}
+      >
+        <div className={styles.heroFooter}>
+          <h1>{brand.title ?? "Untitled"}</h1>
+        </div>
       </section>
 
+      {/* LIST PROJECTS */}
       <section className={styles.projects}>
+        {brand.excerpt ? <p>{brand.excerpt}</p> : null}
         {projects.map((p) => (
           <article key={p.id} className={styles.projectRow}>
             <div className={styles.thumb}>
               <Image
-                src={pickBrandThumb(p.image_hover ?? null)}
+                src={pickBrandThumb(p.image_hover)}
                 alt={p.title ?? "Project"}
                 width={360}
                 height={360}

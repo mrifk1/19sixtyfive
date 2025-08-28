@@ -81,7 +81,7 @@ export default async function DetailPage({
                 href={hrefOf(kind, pn.prev)}
               >
                 <Image
-                  src="/images/logo-icons/Left Toggle Arrow.svg"
+                  src="/images/icon/arrow-left.svg"
                   alt="Previous"
                   width={40}
                   height={40}
@@ -93,7 +93,7 @@ export default async function DetailPage({
                 href={hrefOf(kind, pn.next)}
               >
                 <Image
-                  src="/images/logo-icons/Right Toggle Arrow.svg"
+                  src="/images/icon/arrow-right.svg"
                   alt="Next"
                   width={40}
                   height={40}

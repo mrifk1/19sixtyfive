@@ -46,22 +46,21 @@ export default async function ProjectDetailPage({
   const brand = await getBrandBySlug(params.brand);
   if (!brand) return notFound();
 
-  const [projects, current] = await Promise.all([
+  const [list, proj] = await Promise.all([
     getBrandProjects(brand.id),
     getProjectBySlug(brand.id, params.project),
   ]);
-  if (!current) return notFound();
+  if (!proj) return notFound();
 
-  const ordered = orderProjects(projects);
-  const pn = prevNextProject(ordered, current);
+  const ordered = orderProjects(list);
+  const pn = prevNextProject(ordered, proj);
 
-  const hero = pickProjectHero(current.image_hero ?? null);
-  const logo = pickProjectLogo(current.image_logo ?? null);
-  const img1 = pickImageSrc(current.image_1 ?? null, "desktop");
-  const img2 = pickImageSrc(current.image_2 ?? null, "desktop");
-  const banner = pickProjectBanner(current.image_banner ?? null);
+  const hero = pickProjectHero(proj.image_hero ?? null);
+  const logo = pickProjectLogo(proj.image_logo ?? null);
+  const img1 = pickImageSrc(proj.image_1 ?? null, "desktop");
+  const img2 = pickImageSrc(proj.image_2 ?? null, "desktop");
+  const banner = pickProjectBanner(proj.image_banner ?? null);
 
-  // ---- FIX: strict-safe gallery indexing ----
   const galleryKeys = [
     "image_gallery_1",
     "image_gallery_2",
@@ -72,11 +71,9 @@ export default async function ProjectDetailPage({
     "image_gallery_7",
     "image_gallery_8",
   ] as const;
-  type GalleryKey = (typeof galleryKeys)[number];
-
   const gallery = galleryKeys
     .map((k, i) => {
-      const img = current[k as GalleryKey];
+      const img = proj[k];
       return img ? { key: i, src: pickImageSrc(img, "desktop") } : null;
     })
     .filter(Boolean) as { key: number; src: string }[];
@@ -87,6 +84,35 @@ export default async function ProjectDetailPage({
         className={styles.heroSection}
         style={{ backgroundImage: `url(${hero})` }}
       >
+        {pn && (
+          <div className={styles.heroNavigation}>
+            <Link
+              className={`${styles.navBtn} nav-btn-prev`}
+              aria-label="Previous"
+              href={hrefProject(brand, pn.prev)}
+            >
+              <Image
+                src="/images/icon/arrow-left.svg"
+                alt="Previous"
+                width={40}
+                height={40}
+              />
+            </Link>
+            <Link
+              className={`${styles.navBtn} nav-btn-next`}
+              aria-label="Next"
+              href={hrefProject(brand, pn.next)}
+            >
+              <Image
+                src="/images/icon/arrow-right.svg"
+                alt="Next"
+                width={40}
+                height={40}
+              />
+            </Link>
+          </div>
+        )}
+
         <div className={styles.heroFooter}>
           <Image
             className="hero-logo"
@@ -95,9 +121,9 @@ export default async function ProjectDetailPage({
             width={180}
             height={90}
           />
-          {current.website_link && (
+          {proj.website_link && (
             <a
-              href={current.website_link}
+              href={proj.website_link}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -107,43 +133,51 @@ export default async function ProjectDetailPage({
         </div>
       </section>
 
-      <section className={styles.content}>
-        <h1 className={styles.detailsTitle}>{current.title ?? "Untitled"}</h1>
-        {current.description ? <p>{current.description}</p> : null}
-        <div className="images">
+      <section className={styles.contentSection}>
+        <h1 className={styles.detailsTitle}>{proj.title ?? "Untitled"}</h1>
+        {proj.description ? <p>{proj.description}</p> : null}
+        <div className={styles.images}>
           <Image src={img1} alt="Secondary 1" width={400} height={400} />
           <Image src={img2} alt="Secondary 2" width={400} height={400} />
         </div>
       </section>
 
       <section
-        className={styles.banner}
+        className={styles.bannerSection}
         style={{ backgroundImage: `url(${banner})` }}
       />
 
       {gallery.length ? (
         <section className={styles.gallery}>
-          {gallery.map((g) => (
-            <Image
-              key={g.key}
-              src={g.src}
-              alt={`Gallery ${g.key + 1}`}
-              width={300}
-              height={300}
-            />
-          ))}
+          <div className={styles.galleryRow}>
+            {gallery.map((g) => (
+              <Image
+                key={g.key}
+                className={styles.galleryImg}
+                src={g.src}
+                alt={`Gallery ${g.key + 1}`}
+                width={300}
+                height={300}
+                sizes="(max-width:768px) 150px, 300px"
+              />
+            ))}
+          </div>
         </section>
       ) : null}
 
       {pn ? (
         <div className={styles.articleNav}>
-          <Link href={hrefProject(brand, pn.prev)}>
-            {pn.prev.title ?? "Previous"}
-          </Link>
+          <div className={`${styles.articleNavItem} ${styles.left}`}>
+            <Link href={hrefProject(brand, pn.prev)}>
+              {pn.prev.title ?? "Previous"}
+            </Link>
+          </div>
           <p>|</p>
-          <Link href={hrefProject(brand, pn.next)}>
-            {pn.next.title ?? "Next"}
-          </Link>
+          <div className={`${styles.articleNavItem} ${styles.right}`}>
+            <Link href={hrefProject(brand, pn.next)}>
+              {pn.next.title ?? "Next"}
+            </Link>
+          </div>
         </div>
       ) : null}
     </>
