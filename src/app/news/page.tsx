@@ -3,15 +3,29 @@ import styles from "./News.module.scss";
 import { getNews, buildNewsFilters } from "@/lib/api";
 import NewsClient from "./NewsClient";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";  
 
 export const metadata: Metadata = {
   title: "News | 19sixtyfive",
   alternates: { canonical: "/news" },
 };
 
+async function getNewsSafe(timeoutMs = 8000) {
+  try {
+    const result = await Promise.race([
+      getNews(), 
+      new Promise<never>((_, rej) =>
+        setTimeout(() => rej(new Error("news-timeout")), timeoutMs)
+      ),
+    ]);
+    return result as Awaited<ReturnType<typeof getNews>>;
+  } catch {
+    return []; 
+  }
+}
+
 export default async function NewsPage() {
-  const items = await getNews();
+  const items = await getNewsSafe(8000); 
   const filters = buildNewsFilters(items);
 
   const slides = [
@@ -30,7 +44,7 @@ export default async function NewsPage() {
         </h1>
       </section>
 
-      {/* Angled hero image (background-style) */}
+      {/* Angled hero image */}
       <section className={`${styles.heroImg} ${styles.heroNews}`} />
 
       {/* SUBTITLE */}
@@ -43,10 +57,7 @@ export default async function NewsPage() {
       </section>
 
       {/* FRAME + CONTENT */}
-      <main
-        className={`${styles.frame} ${styles.frameNews} ${styles.frameBlack}`}
-      >
-        {/* Filters + List + Carousel handled by client for interactivity */}
+      <main className={`${styles.frame} ${styles.frameNews} ${styles.frameBlack}`}>
         <NewsClient items={items} filters={filters} slides={slides} />
       </main>
     </>
