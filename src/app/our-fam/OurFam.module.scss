@@ -23,7 +23,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background-image: url("/images/our-fam/hero.png"); /* ganti dengan Our Fam Hero Image kamu */
+  background-image: url("/images/our-fam/hero.png");
 }
 
 /* ===== ABOUT (maps .hero__subtitle) ===== */
@@ -159,7 +159,7 @@
 }
 .contentText {
   width: 29%;
-  font: $font-desktop-montserrat-500-16; /* penting: Montserrat seperti yang lama */
+  font: $font-desktop-montserrat-500-16;
   color: $color-secondary;
   margin: 0;
 }
@@ -188,7 +188,7 @@
   }
 }
 
-/* ===== Responsive (maps @include respond("mobile") rules lama) ===== */
+/* ===== Responsive ===== */
 @include respond("mobile") {
   .heroTitleSection {
     padding: 1rem 4rem 2rem 2rem;
@@ -240,7 +240,7 @@
 
   .banner {
     height: 45rem;
-    clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 88% 100%, 0 100%);
 
     .bannerContent {
       position: relative;
@@ -253,6 +253,7 @@
       height: 100%;
       pointer-events: none;
     }
+
     .bannerInfo {
       width: 100%;
       display: flex;
@@ -262,18 +263,26 @@
       pointer-events: auto;
 
       .bannerHeading {
-        font: $font-mobile-dm-400-20;
-        width: 100%;
+        width: 75%;
         color: $color-primary;
         margin: 0 0 2rem 0;
       }
+
       :global(img) {
         height: 60px;
         width: auto;
       }
     }
+
     .bannerCta {
       font: $font-mobile-dm-400-14;
+      pointer-events: auto;
+      color: $color-primary;
+      text-decoration: none;
     }
+  }
+
+  .bannerSecond {
+    clip-path: polygon(100% 100%, 0 100%, 0 15%, 12% 0, 100% 0);
   }
 }

@@ -38,6 +38,14 @@ export async function generateMetadata({
   };
 }
 
+type GalleryItem = { key: number; src: string };
+
+function chunk<T>(arr: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
 export default async function ProjectDetailPage({
   params,
 }: {
@@ -71,12 +79,15 @@ export default async function ProjectDetailPage({
     "image_gallery_7",
     "image_gallery_8",
   ] as const;
-  const gallery = galleryKeys
+
+  const gallery: GalleryItem[] = galleryKeys
     .map((k, i) => {
       const img = proj[k];
       return img ? { key: i, src: pickImageSrc(img, "desktop") } : null;
     })
-    .filter(Boolean) as { key: number; src: string }[];
+    .filter(Boolean) as GalleryItem[];
+
+  const rows = chunk(gallery, 4);
 
   return (
     <>
@@ -147,21 +158,25 @@ export default async function ProjectDetailPage({
         style={{ backgroundImage: `url(${banner})` }}
       />
 
-      {gallery.length ? (
-        <section className={styles.gallery}>
-          <div className={styles.galleryRow}>
-            {gallery.map((g) => (
-              <Image
-                key={g.key}
-                className={styles.galleryImg}
-                src={g.src}
-                alt={`Gallery ${g.key + 1}`}
-                width={300}
-                height={300}
-                sizes="(max-width:768px) 150px, 300px"
-              />
-            ))}
-          </div>
+      {rows.length ? (
+        <section className={styles.gallery} id="community-detail-section">
+          {rows.map((row, rIdx) => (
+            <div className={styles.galleryRow} key={`row-${rIdx}`}>
+              {row.map((g) => (
+                <div className={styles.imgBox} key={g.key}>
+                  <Image
+                    className={styles.galleryImg}
+                    src={g.src}
+                    alt={`Gallery ${g.key + 1}`}
+                    fill
+                    // match 150px on mobile, 300px otherwise
+                    sizes="(max-width: 768px) 150px, 300px"
+                    priority={rIdx === 0 && g.key < 4}
+                  />
+                </div>
+              ))}
+            </div>
+          ))}
         </section>
       ) : null}
 

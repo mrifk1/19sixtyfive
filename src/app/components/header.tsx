@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import styles from "../../styles/components/Header.module.scss";
+import styles from "./Header.module.scss";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);

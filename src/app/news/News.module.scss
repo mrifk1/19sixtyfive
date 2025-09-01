@@ -119,19 +119,21 @@
 
   .carouselContainer {
     display: flex;
-    width: 300%;
     height: 100%;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  
   .carouselSlide {
     position: relative;
-    width: 100%;
+    flex: 0 0 auto;
     clip-path: polygon(0 0, 100% 0, 100% 87%, 94% 100%, 0 100%);
+    
     :global(img) {
       display: block;
       object-fit: cover;
     }
   }
+  
   .carouselDots {
     position: absolute;
     bottom: 2rem;
@@ -139,6 +141,8 @@
     transform: translateX(-50%);
     display: flex;
     gap: 1rem;
+    z-index: 10;
+    
     .dot {
       width: 12px;
       height: 12px;
@@ -147,7 +151,12 @@
       border: 2px solid transparent;
       cursor: pointer;
       transition: all 0.3s ease;
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.8);
+      }
     }
+    
     .active {
       background-color: v.$color-primary;
       border-color: v.$color-primary;
@@ -258,10 +267,19 @@
     height: 300px;
     padding-bottom: 2rem;
     border-bottom: 0.125rem solid v.$color-primary;
+    
+    .carouselSlide {
+      clip-path: polygon(0 0, 100% 0, 100% 82%, 88% 100%, 0 100%);
+    }
   }
-  .carouselDots .dot {
-    width: 10px;
-    height: 10px;
+  
+  .carouselDots {
+    bottom: 1rem;
+    
+    .dot {
+      width: 10px;
+      height: 10px;
+    }
   }
 
   .newsItem {

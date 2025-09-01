@@ -35,6 +35,14 @@ export async function generateMetadata({
   };
 }
 
+type GalleryItem = { key: number; src: string };
+
+function chunk<T>(arr: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
 export default async function DetailPage({
   params,
 }: {
@@ -58,13 +66,18 @@ export default async function DetailPage({
   const img2 = pickImageSrc(item.image_2 ?? null, "desktop");
   const banner = pickBanner(item.image_banner ?? null);
 
-  const gallery = Array.from(
+  const galleryKeys = Array.from(
     { length: 8 },
     (_, i) => `image_gallery_${i + 1}` as const
-  )
-    .map((k) => item[k] ?? null)
-    .filter(Boolean)
-    .map((img, i) => ({ key: i, src: pickImageSrc(img, "desktop") }));
+  );
+  const gallery: GalleryItem[] = galleryKeys
+    .map((k, i) => {
+      const img = item[k];
+      return img ? { key: i, src: pickImageSrc(img, "desktop") } : null;
+    })
+    .filter(Boolean) as GalleryItem[];
+
+  const rows = chunk(gallery, 4);
 
   return (
     <>
@@ -137,21 +150,24 @@ export default async function DetailPage({
         style={{ backgroundImage: `url(${banner})` }}
       />
 
-      {gallery.length ? (
-        <section className={styles.gallery}>
-          <div className={styles.galleryRow}>
-            {gallery.map((g) => (
-              <Image
-                key={g.key}
-                className={styles.galleryImg}
-                src={g.src}
-                alt={`Gallery ${g.key + 1}`}
-                width={300}
-                height={300}
-                sizes="(max-width:768px) 150px, 300px"
-              />
-            ))}
-          </div>
+      {rows.length ? (
+        <section className={styles.gallery} id="community-detail-section">
+          {rows.map((row, rIdx) => (
+            <div className={styles.galleryRow} key={`row-${rIdx}`}>
+              {row.map((g) => (
+                <div className={styles.imgBox} key={g.key}>
+                  <Image
+                    className={styles.galleryImg}
+                    src={g.src}
+                    alt={`Gallery ${g.key + 1}`}
+                    fill
+                    sizes="(max-width: 768px) 150px, 300px"
+                    priority={rIdx === 0 && g.key < 4}
+                  />
+                </div>
+              ))}
+            </div>
+          ))}
         </section>
       ) : null}
 

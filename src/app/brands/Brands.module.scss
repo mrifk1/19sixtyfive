@@ -62,42 +62,46 @@
   flex-direction: column;
 }
 .frameItem {
+  position: relative;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: $section-medium;
-  position: relative;
-  align-items: center;
   border-bottom: 0.2rem solid var(--frame-border);
 
   .frameImg {
     position: absolute;
     right: 16rem;
-    width: 350px;
     z-index: 2;
     display: flex;
+    width: 350px;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s;
+    
     :global(img) {
+      display: block;
       width: 100%;
       height: auto;
-      display: block;
       clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
     }
   }
+  
   &:hover .frameImg {
     opacity: 1;
   }
+  
   figcaption {
     margin-left: $section-medium;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex: 1;
+    
     :global(a) {
+      flex: 1;
       color: var(--frame-text-color);
       font: $font-desktop-dm-400-42;
-      flex: 1;
       text-decoration: none;
       @include m.hover-arrow(var(--arrow-icon), var(--arrow-icon-hover));
     }
@@ -343,6 +347,7 @@
     figcaption {
       margin-left: 0;
       width: 100%;
+      justify-content: space-between;
 
       :global(a) {
         font: $font-mobile-dm-400-20;

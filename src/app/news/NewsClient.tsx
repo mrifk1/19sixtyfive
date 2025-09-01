@@ -35,14 +35,31 @@ export default function NewsClient({ items, filters, slides }: Props) {
   // ----- Simple carousel -----
   const [slide, setSlide] = useState(0);
   const timer = useRef<number | null>(null);
-  useEffect(() => {
+  
+  const startTimer = () => {
+    if (timer.current) window.clearInterval(timer.current);
     timer.current = window.setInterval(() => {
       setSlide((s) => (s + 1) % slides.length);
-    }, 4000);
-    return () => {
-      if (timer.current) window.clearInterval(timer.current);
-    };
+    }, 5000);
+  };
+  
+  const stopTimer = () => {
+    if (timer.current) {
+      window.clearInterval(timer.current);
+      timer.current = null;
+    }
+  };
+  
+  useEffect(() => {
+    startTimer();
+    return stopTimer;
   }, [slides.length]);
+  
+  const goToSlide = (index: number) => {
+    setSlide(index);
+    stopTimer();
+    setTimeout(startTimer, 1000); // Restart timer after manual navigation
+  };
 
   return (
     <>
@@ -75,16 +92,21 @@ export default function NewsClient({ items, filters, slides }: Props) {
           <div
             className={styles.carouselContainer}
             style={{
-              transform: `translateX(-${(100 / slides.length) * slide}%)`,
+              width: `${slides.length * 100}%`,
+              transform: `translateX(-${100 * slide}%)`,
             }}
           >
             {slides.map((src, i) => (
-              <div key={i} className={styles.carouselSlide}>
+              <div 
+                key={i} 
+                className={styles.carouselSlide}
+                style={{ width: "100%" }}
+              >
                 <Image
-                  src={src || "/images/placeholders/placeholder-hero.jpg"}
+                  src={src || "/images/placeholders/placeholder.png"}
                   alt={`Slide ${i + 1}`}
                   fill
-                  sizes="100vw"
+                  sizes="(max-width: 768px) 100vw, 100vw"
                   priority={i === 0}
                 />
               </div>
@@ -97,7 +119,7 @@ export default function NewsClient({ items, filters, slides }: Props) {
                 key={i}
                 className={`${styles.dot} ${i === slide ? styles.active : ""}`}
                 aria-label={`Go to slide ${i + 1}`}
-                onClick={() => setSlide(i)}
+                onClick={() => goToSlide(i)}
               />
             ))}
           </div>
