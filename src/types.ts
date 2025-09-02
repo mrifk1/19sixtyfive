@@ -64,7 +64,7 @@ export interface BrandProject {
   description?: string | null;
   website_link?: string | null;
 
-  image_hover?: DeviceImage | null;
+  image_event?: DeviceImage | null;
   image_hero?: DeviceImage | null;
   image_logo?: DeviceImage | null;
   image_1?: DeviceImage | null;

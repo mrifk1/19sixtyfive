@@ -58,7 +58,7 @@ export default async function BrandDetailPage({
           <article key={p.id} className={styles.projectRow}>
             <div className={styles.thumb}>
               <Image
-                src={pickBrandThumb(p.image_hover)}
+                src={pickBrandThumb(p.image_event)}
                 alt={p.title ?? "Project"}
                 width={360}
                 height={360}
