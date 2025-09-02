@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../../Brands.module.scss";
-
 import {
   getBrandBySlug,
   getBrandProjects,
@@ -91,38 +90,41 @@ export default async function ProjectDetailPage({
 
   return (
     <>
+      {/* ===== Hero (match file kedua) ===== */}
       <section
         className={styles.heroSection}
         style={{ backgroundImage: `url(${hero})` }}
       >
-        {pn && (
-          <div className={styles.heroNavigation}>
-            <Link
-              className={`${styles.navBtn} nav-btn-prev`}
-              aria-label="Previous"
-              href={hrefProject(brand, pn.prev)}
-            >
-              <Image
-                src="/images/icon/arrow-left.svg"
-                alt="Previous"
-                width={40}
-                height={40}
-              />
-            </Link>
-            <Link
-              className={`${styles.navBtn} nav-btn-next`}
-              aria-label="Next"
-              href={hrefProject(brand, pn.next)}
-            >
-              <Image
-                src="/images/icon/arrow-right.svg"
-                alt="Next"
-                width={40}
-                height={40}
-              />
-            </Link>
-          </div>
-        )}
+        <div className={styles.heroNavigation}>
+          {pn && (
+            <>
+              <Link
+                className={`${styles.navBtn} nav-btn-prev`}
+                aria-label="Previous"
+                href={hrefProject(brand, pn.prev)}
+              >
+                <Image
+                  src="/images/icon/arrow-left.svg"
+                  alt="Previous"
+                  width={40}
+                  height={40}
+                />
+              </Link>
+              <Link
+                className={`${styles.navBtn} nav-btn-next`}
+                aria-label="Next"
+                href={hrefProject(brand, pn.next)}
+              >
+                <Image
+                  src="/images/icon/arrow-right.svg"
+                  alt="Next"
+                  width={40}
+                  height={40}
+                />
+              </Link>
+            </>
+          )}
+        </div>
 
         <div className={styles.heroFooter}>
           <Image
@@ -144,6 +146,7 @@ export default async function ProjectDetailPage({
         </div>
       </section>
 
+      {/* ===== Content ===== */}
       <section className={styles.contentSection}>
         <h1 className={styles.detailsTitle}>{proj.title ?? "Untitled"}</h1>
         {proj.description ? <p>{proj.description}</p> : null}
@@ -153,11 +156,13 @@ export default async function ProjectDetailPage({
         </div>
       </section>
 
+      {/* ===== Banner ===== */}
       <section
         className={styles.bannerSection}
         style={{ backgroundImage: `url(${banner})` }}
       />
 
+      {/* ===== Gallery (4 per row, same sizing rule) ===== */}
       {rows.length ? (
         <section className={styles.gallery} id="community-detail-section">
           {rows.map((row, rIdx) => (
@@ -169,7 +174,6 @@ export default async function ProjectDetailPage({
                     src={g.src}
                     alt={`Gallery ${g.key + 1}`}
                     fill
-                    // match 150px on mobile, 300px otherwise
                     sizes="(max-width: 768px) 150px, 300px"
                     priority={rIdx === 0 && g.key < 4}
                   />
@@ -180,6 +184,7 @@ export default async function ProjectDetailPage({
         </section>
       ) : null}
 
+      {/* ===== Article Nav (same pattern) ===== */}
       {pn ? (
         <div className={styles.articleNav}>
           <div className={`${styles.articleNavItem} ${styles.left}`}>
