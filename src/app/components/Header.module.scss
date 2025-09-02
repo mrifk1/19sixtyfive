@@ -5,6 +5,7 @@
   position: fixed; /* was: sticky */
   z-index: 1000;
   width: 100%;
+  max-width: 100%;
   height: 6rem;
   padding: 0 $section-medium;
   background-color: $color-primary;

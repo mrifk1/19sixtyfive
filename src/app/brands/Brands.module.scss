@@ -132,7 +132,7 @@
   align-items: center;
   padding: 2rem 0;
   .thumb {
-    width: auto;
+    max-width: 100%;
     height: auto;
     display: flex;
     justify-content: flex-end;
@@ -144,6 +144,7 @@
     }
   }
   .info {
+    max-width: 100%;
     h2 {
       font: $font-desktop-dm-400-32;
       margin: 0 0 2rem 0;
@@ -378,6 +379,8 @@
   }
 
   .projectRow {
+    display: flex;
+    max-width: 100%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -386,6 +389,12 @@
     .thumb {
       width: 300px;
       height: auto;
+      :global(img) {
+        width: auto;
+        height: auto;
+        object-fit: cover;
+        clip-path: polygon(0 0, 100% 0, 100% 87%, 87% 100%, 0 100%);
+      }
     }
 
     .info {
