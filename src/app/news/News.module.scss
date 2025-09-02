@@ -136,7 +136,7 @@
   
   .carouselDots {
     position: absolute;
-    bottom: 2rem;
+    bottom: 3rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -173,7 +173,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 120px;
+  height: 160px;
   padding: 1rem 0;
   border-bottom: 0.125rem solid v.$color-secondary;
   text-decoration: none;
@@ -190,7 +190,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 23%;
+  width: 30%;
   padding-right: 4rem;
 }
 .newsText h1 {
@@ -199,7 +199,7 @@
   margin: 0;
 }
 .newsTitle {
-  width: 70%;
+  width: 68%;
 }
 .newsTitle h1 {
   font: v.$font-desktop-dm-400-32;
@@ -270,15 +270,6 @@
     
     .carouselSlide {
       clip-path: polygon(0 0, 100% 0, 100% 82%, 88% 100%, 0 100%);
-    }
-  }
-  
-  .carouselDots {
-    bottom: 1rem;
-    
-    .dot {
-      width: 10px;
-      height: 10px;
     }
   }
 
