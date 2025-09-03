@@ -379,6 +379,7 @@
     align-items: flex-start;
     gap: 1rem;
     padding: 1rem 0;
+    border-bottom: 0.1rem solid var(--frame-border);
 
     .frameImg {
       position: relative;

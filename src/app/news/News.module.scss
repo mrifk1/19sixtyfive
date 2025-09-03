@@ -115,25 +115,25 @@
   padding-top: 2rem;
   margin: 0;
   overflow: hidden;
-  border-top: 0.125rem solid v.$color-secondary;
+  border-top: 0.2rem solid v.$color-secondary;
 
   .carouselContainer {
     display: flex;
     height: 100%;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .carouselSlide {
     position: relative;
     flex: 0 0 auto;
     clip-path: polygon(0 0, 100% 0, 100% 87%, 94% 100%, 0 100%);
-    
+
     :global(img) {
       display: block;
       object-fit: cover;
     }
   }
-  
+
   .carouselDots {
     position: absolute;
     bottom: 3rem;
@@ -142,7 +142,7 @@
     display: flex;
     gap: 1rem;
     z-index: 10;
-    
+
     .dot {
       width: 12px;
       height: 12px;
@@ -151,12 +151,12 @@
       border: 2px solid transparent;
       cursor: pointer;
       transition: all 0.3s ease;
-      
+
       &:hover {
         background-color: rgba(255, 255, 255, 0.8);
       }
     }
-    
+
     .active {
       background-color: v.$color-primary;
       border-color: v.$color-primary;
@@ -175,7 +175,7 @@
   justify-content: space-between;
   height: 160px;
   padding: 1rem 0;
-  border-bottom: 0.125rem solid v.$color-secondary;
+  border-bottom: 0.2rem solid v.$color-secondary;
   text-decoration: none;
   background: transparent;
   cursor: pointer;
@@ -263,57 +263,71 @@
     padding: v.$page-mobile-normal;
   }
 
+  .newsFilterList {
+    li a {
+      font: v.$font-mobile-dm-400-20;
+    }
+  }
+  .filterCount {
+    font: v.$font-mobile-dm-400-14;
+    margin-left: 0.25rem;
+  }
+
   .newsCarousel {
     height: 300px;
+    border-top: 0.1rem solid v.$color-secondary;
     padding-bottom: 2rem;
-    border-bottom: 0.125rem solid v.$color-primary;
-    
+
     .carouselSlide {
       clip-path: polygon(0 0, 100% 0, 100% 82%, 88% 100%, 0 100%);
     }
   }
 
   .newsItem {
+    width: 100%;
     flex-direction: column;
+    border-bottom: 0.1rem solid v.$color-secondary;
     align-items: flex-start;
     min-height: 6rem;
     height: auto;
     gap: 0.5rem;
-    &:hover .newsArrow::after {
-      width: 1rem;
-      height: 1rem;
+  }
+
+  .newsArrow {
+    &::after {
+      content: none;
     }
   }
+
   .newsContentWrapper {
     width: 100%;
+    padding: 0;
     order: 2;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     height: 2rem;
+
+    &::after {
+      content: "";
+      width: 1rem;
+      height: 1rem;
+      background-image: url("/images/icon/arrow-black.svg");
+      background-size: contain;
+    }
   }
+
   .newsText h1 {
     font: v.$font-mobile-dm-400-14;
     opacity: 0.7;
   }
   .newsTitle {
-    width: 80%;
+    width: 100%;
     order: 1;
     min-height: 3rem;
   }
   .newsTitle h1 {
     font: v.$font-mobile-dm-400-20;
-  }
-
-  .newsArrow {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    height: 2rem;
-    &::after {
-      width: 1rem;
-      height: 1rem;
-      background-image: url("/images/icon/arrow-black-hover.svg");
-    }
   }
 
   .loadMore {
