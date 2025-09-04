@@ -149,7 +149,9 @@ export default async function ProjectDetailPage({
       {/* ===== Content ===== */}
       <section className={styles.contentSection}>
         <h1 className={styles.detailsTitle}>{proj.title ?? "Untitled"}</h1>
-        {proj.description ? <p>{proj.description}</p> : null}
+        {proj.description ? (
+          <p dangerouslySetInnerHTML={{ __html: proj.description }} />
+        ) : null}
         <div className={styles.images}>
           <Image src={img1} alt="Secondary 1" width={400} height={400} />
           <Image src={img2} alt="Secondary 2" width={400} height={400} />

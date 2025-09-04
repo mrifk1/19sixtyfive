@@ -138,7 +138,9 @@ export default async function DetailPage({
 
       <section className={styles.contentSection}>
         <h1 className={styles.detailsTitle}>{item.title ?? "Untitled"}</h1>
-        {item.description ? <p>{item.description}</p> : null}
+        {item.description ? (
+          <p dangerouslySetInnerHTML={{ __html: item.description }} />
+        ) : null}
         <div className={styles.images}>
           <Image src={img1} alt="Secondary 1" width={400} height={400} />
           <Image src={img2} alt="Secondary 2" width={400} height={400} />
