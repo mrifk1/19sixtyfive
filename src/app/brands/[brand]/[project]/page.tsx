@@ -13,6 +13,7 @@ import {
   pickProjectBanner,
   pickImageSrc,
   hrefProject,
+  isMobileFromHeaders,
 } from "@/lib/api";
 import { notFound } from "next/navigation";
 
@@ -21,18 +22,22 @@ export const revalidate = 3600;
 export async function generateMetadata({
   params,
 }: {
-  params: { brand: string; project: string };
+  params: Promise<{ brand: string; project: string }>;
 }): Promise<Metadata> {
-  const brand = await getBrandBySlug(params.brand);
+  const { brand: brandParam, project: projectParam } = await params;
+  const brand = await getBrandBySlug(brandParam);
   if (!brand) return { title: "Not Found" };
-  const proj = await getProjectBySlug(brand.id, params.project);
+  
+  // Detect mobile for metadata as well
+  const isMobile = await isMobileFromHeaders();
+  const proj = await getProjectBySlug(brand.id, projectParam, isMobile);
   const title = proj?.title ?? "Untitled";
   return {
     title: `${title} | 19sixtyfive`,
-    alternates: { canonical: `/brands/${params.brand}/${params.project}` },
+    alternates: { canonical: `/brands/${brandParam}/${projectParam}` },
     openGraph: {
       title,
-      images: [{ url: pickProjectHero(proj?.image_hero ?? null) }],
+      images: [{ url: pickProjectHero(proj?.image_hero ?? null, isMobile) }],
     },
   };
 }
@@ -48,25 +53,29 @@ function chunk<T>(arr: T[], size: number): T[][] {
 export default async function ProjectDetailPage({
   params,
 }: {
-  params: { brand: string; project: string };
+  params: Promise<{ brand: string; project: string }>;
 }) {
-  const brand = await getBrandBySlug(params.brand);
+  const { brand: brandParam, project: projectParam } = await params;
+  const brand = await getBrandBySlug(brandParam);
   if (!brand) return notFound();
 
+  // Detect mobile from request headers  
+  const isMobile = await isMobileFromHeaders();
+
   const [list, proj] = await Promise.all([
-    getBrandProjects(brand.id),
-    getProjectBySlug(brand.id, params.project),
+    getBrandProjects(brand.id, isMobile),
+    getProjectBySlug(brand.id, projectParam, isMobile),
   ]);
   if (!proj) return notFound();
 
   const ordered = orderProjects(list);
   const pn = prevNextProject(ordered, proj);
 
-  const hero = pickProjectHero(proj.image_hero ?? null);
+  const hero = pickProjectHero(proj.image_hero ?? null, isMobile);
   const logo = pickProjectLogo(proj.image_logo ?? null);
-  const img1 = pickImageSrc(proj.image_1 ?? null, "desktop");
-  const img2 = pickImageSrc(proj.image_2 ?? null, "desktop");
-  const banner = pickProjectBanner(proj.image_banner ?? null);
+  const img1 = pickImageSrc(proj.image_1 ?? null, isMobile ? "mobile" : "desktop");
+  const img2 = pickImageSrc(proj.image_2 ?? null, isMobile ? "mobile" : "desktop");
+  const banner = pickProjectBanner(proj.image_banner ?? null, isMobile);
 
   const galleryKeys = [
     "image_gallery_1",
@@ -82,7 +91,7 @@ export default async function ProjectDetailPage({
   const gallery: GalleryItem[] = galleryKeys
     .map((k, i) => {
       const img = proj[k];
-      return img ? { key: i, src: pickImageSrc(img, "desktop") } : null;
+      return img ? { key: i, src: pickImageSrc(img, isMobile ? "mobile" : "desktop") } : null;
     })
     .filter(Boolean) as GalleryItem[];
 

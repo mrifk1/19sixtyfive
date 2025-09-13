@@ -8,6 +8,7 @@ import {
   asKind,
   getCollection,
   getItemBySlug,
+  isMobileFromHeaders,
   orderByDisplay,
   prevNext,
   hrefOf,
@@ -22,16 +23,18 @@ export const revalidate = 3600;
 export async function generateMetadata({
   params,
 }: {
-  params: { collection: string; slug: string };
+  params: Promise<{ collection: string; slug: string }>;
 }): Promise<Metadata> {
-  const kind = asKind(params.collection);
+  const { collection, slug } = await params;
+  const kind = asKind(collection);
   if (!kind) return { title: "Not Found" };
-  const item = await getItemBySlug(kind, params.slug);
+  const isMobile = await isMobileFromHeaders();
+  const item = await getItemBySlug(kind, slug, isMobile);
   const title = item?.title ?? "Untitled";
   return {
     title: `${title} | 19sixtyfive`,
-    alternates: { canonical: `/${params.collection}/${params.slug}` },
-    openGraph: { title, images: [{ url: pickHero(item?.image_hero ?? null) }] },
+    alternates: { canonical: `/${collection}/${slug}` },
+    openGraph: { title, images: [{ url: pickHero(item?.image_hero ?? null, isMobile) }] },
   };
 }
 
@@ -46,25 +49,29 @@ function chunk<T>(arr: T[], size: number): T[][] {
 export default async function DetailPage({
   params,
 }: {
-  params: { collection: string; slug: string };
+  params: Promise<{ collection: string; slug: string }>;
 }) {
-  const kind = asKind(params.collection);
+  const { collection, slug } = await params;
+  const kind = asKind(collection);
   if (!kind) return notFound();
 
+  // Detect mobile from request headers
+  const isMobile = await isMobileFromHeaders();
+
   const [list, item] = await Promise.all([
-    getCollection(kind),
-    getItemBySlug(kind, params.slug),
+    getCollection(kind, isMobile),
+    getItemBySlug(kind, slug, isMobile),
   ]);
   if (!item) return notFound();
 
   const ordered = orderByDisplay(list);
   const pn = prevNext(ordered, item);
 
-  const hero = pickHero(item.image_hero ?? null);
+  const hero = pickHero(item.image_hero ?? null, isMobile);
   const logo = pickLogo(item.image_logo ?? null);
-  const img1 = pickImageSrc(item.image_1 ?? null, "desktop");
-  const img2 = pickImageSrc(item.image_2 ?? null, "desktop");
-  const banner = pickBanner(item.image_banner ?? null);
+  const img1 = pickImageSrc(item.image_1 ?? null, isMobile ? "mobile" : "desktop");
+  const img2 = pickImageSrc(item.image_2 ?? null, isMobile ? "mobile" : "desktop");
+  const banner = pickBanner(item.image_banner ?? null, isMobile);
 
   const galleryKeys = Array.from(
     { length: 8 },

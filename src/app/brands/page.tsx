@@ -44,7 +44,7 @@ export default async function BrandsPage() {
             <figure key={b.id} className={styles.frameItem}>
               <div className={styles.frameImg}>
                 <Image
-                  src={pickBrandThumb(b.image_hover ?? null)}
+                  src={pickBrandThumb(b.image_hover ?? null, false)}
                   alt={b.title ?? "Brand"}
                   width={350}
                   height={350}

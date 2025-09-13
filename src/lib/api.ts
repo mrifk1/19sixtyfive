@@ -30,17 +30,39 @@ export function slugify(input?: string | null): string {
     .replace(/^-+|-+$/g, "");
 }
 
+export function isMobileDevice(userAgent?: string): boolean {
+  if (!userAgent) return false;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+}
+
+// Server-side helper to detect mobile from Next.js headers
+export async function isMobileFromHeaders(): Promise<boolean> {
+  try {
+    const { headers } = await import('next/headers');
+    const headersList = await headers();
+    const userAgent = headersList.get('user-agent') || '';
+    return isMobileDevice(userAgent);
+  } catch {
+    return false;
+  }
+}
+
 /* ==============================
  * Fetch wrapper (ISR + Tag-based)
  * ============================== */
-type GetOpts = { revalidate?: number; tags?: string[] };
+type GetOpts = { revalidate?: number; tags?: string[]; isMobile?: boolean };
 
 export async function apiGet<T>(path: string, opts: GetOpts = {}): Promise<T> {
-  const { revalidate = 3600, tags = [] } = opts; // default 1h
+  const { revalidate = 3600, tags = [], isMobile = false } = opts; // default 1h
   const isDev = process.env.NODE_ENV !== "production";
   const url = path.startsWith("http") ? path : `${BASE_URL}${path}`;
+  
+  // Add device parameter to query string
+  const separator = url.includes('?') ? '&' : '?';
+  const deviceParam = isMobile ? `${separator}device=mobile` : `${separator}device=desktop`;
+  const finalUrl = `${url}${deviceParam}`;
 
-  const res = await fetch(url, {
+  const res = await fetch(finalUrl, {
     method: "GET",
     headers: { Accept: "application/json", "X-API-Key": API_KEY },
     // Dev: always fresh; Prod: ISR + Tags
@@ -70,13 +92,14 @@ export function asKind(s: string): CollectionKind | null {
   return KIND_MAP[s] ?? null;
 }
 
-export async function getCollection(kind: string): Promise<CollectionItem[]> {
+export async function getCollection(kind: string, isMobile: boolean = false): Promise<CollectionItem[]> {
   const k = asKind(kind);
   if (!k) return [];
   try {
     const data = await apiGet<PaginatedResponse<CollectionItem>>(`/${k}`, {
       revalidate: 3600,
       tags: ["collections", `collections:${k}`],
+      isMobile,
     });
     return Array.isArray(data.items) ? data.items : [];
   } catch {
@@ -86,9 +109,10 @@ export async function getCollection(kind: string): Promise<CollectionItem[]> {
 
 export async function getItemBySlug(
   kind: string,
-  slug: string
+  slug: string,
+  isMobile: boolean = false
 ): Promise<CollectionItem | null> {
-  const list = await getCollection(kind);
+  const list = await getCollection(kind, isMobile);
   const bySlug =
     list.find((x) => (x.slug ?? "") === slug || x.id === slug) ??
     list.find((x) => slugify(x.title) === slug);
@@ -149,8 +173,8 @@ export const pickHero = (img?: DeviceImage | null, isMobile = false) =>
   pickImageSrc(img, isMobile ? "mobile" : "desktop") || PLACEHOLDER.hero;
 export const pickLogo = (img?: DeviceImage | null) =>
   pickImageSrc(img, "desktop") || PLACEHOLDER.logo;
-export const pickHover = (img?: DeviceImage | null) =>
-  pickImageSrc(img, "desktop") || PLACEHOLDER.thumb;
+export const pickHover = (img?: DeviceImage | null, isMobile = false) =>
+  pickImageSrc(img, isMobile ? "mobile" : "desktop") || PLACEHOLDER.thumb;
 export const pickBanner = (img?: DeviceImage | null, isMobile = false) =>
   pickImageSrc(img, isMobile ? "mobile" : "desktop") || PLACEHOLDER.banner;
 
@@ -194,13 +218,15 @@ export async function getBrandBySlug(slug: string): Promise<BrandItem | null> {
 }
 
 export async function getBrandProjects(
-  brandId: string
+  brandId: string,
+  isMobile: boolean = false
 ): Promise<BrandProject[]> {
   try {
     // FE filter if BE doesn't support ?brand_id= yet
     const res = await apiGet<{ items: BrandProject[] }>(BRAND_DETAIL_BASE, {
       revalidate: 3600,
       tags: ["brand-projects", `brand:${brandId}`],
+      isMobile,
     });
     const items = Array.isArray(res.items) ? res.items : [];
     return items.filter((p) => String(p.brand_id) === String(brandId));
@@ -211,9 +237,10 @@ export async function getBrandProjects(
 
 export async function getProjectBySlug(
   brandId: string,
-  slug: string
+  slug: string,
+  isMobile: boolean = false
 ): Promise<BrandProject | null> {
-  const items = await getBrandProjects(brandId);
+  const items = await getBrandProjects(brandId, isMobile);
   const direct =
     items.find((p) => (p.slug ?? "") === slug || p.id === slug) ??
     items.find((p) => slugify(p.title) === slug);
@@ -235,11 +262,13 @@ export function prevNextProject(list: BrandProject[], current: BrandProject) {
 }
 
 // Brand image pickers
-export const pickBrandThumb = (img?: DeviceImage | null) =>
-  pickImageSrc(img, "desktop");
-export const pickProjectHero = (img?: DeviceImage | null) => pickHero(img);
+export const pickBrandThumb = (img?: DeviceImage | null, isMobile = false) =>
+  pickImageSrc(img, isMobile ? "mobile" : "desktop");
+export const pickProjectHero = (img?: DeviceImage | null, isMobile = false) => 
+  pickHero(img, isMobile);
 export const pickProjectLogo = (img?: DeviceImage | null) => pickLogo(img);
-export const pickProjectBanner = (img?: DeviceImage | null) => pickBanner(img);
+export const pickProjectBanner = (img?: DeviceImage | null, isMobile = false) => 
+  pickBanner(img, isMobile);
 
 /* ==============================
  * News (list only, no detail)

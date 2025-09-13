@@ -9,6 +9,7 @@ import {
   pickBrandThumb,
   pickBanner,
   hrefProject,
+  isMobileFromHeaders,
 } from "@/lib/api";
 import { notFound } from "next/navigation";
 
@@ -17,28 +18,32 @@ export const revalidate = 3600;
 export async function generateMetadata({
   params,
 }: {
-  params: { brand: string };
+  params: Promise<{ brand: string }>;
 }): Promise<Metadata> {
-  const brand = await getBrandBySlug(params.brand);
+  const { brand: brandParam } = await params;
+  const brand = await getBrandBySlug(brandParam);
   if (!brand) return { title: "Not Found" };
   const title = brand.title ?? "Untitled";
   return {
     title: `${title} | 19sixtyfive`,
-    alternates: { canonical: `/brands/${params.brand}` },
+    alternates: { canonical: `/brands/${brandParam}` },
   };
 }
 
 export default async function BrandDetailPage({
   params,
 }: {
-  params: { brand: string };
+  params: Promise<{ brand: string }>;
 }) {
-  const brand = await getBrandBySlug(params.brand);
+  const { brand: brandParam } = await params;
+  const brand = await getBrandBySlug(brandParam);
   if (!brand) return notFound();
 
-  const projects = await getBrandProjects(brand.id);
+  // Detect mobile from request headers
+  const isMobile = await isMobileFromHeaders();
+  const projects = await getBrandProjects(brand.id, isMobile);
 
-  const hero = pickBanner(brand.image_banner);
+  const hero = pickBanner(brand.image_banner, isMobile);
 
   return (
     <>
@@ -58,7 +63,7 @@ export default async function BrandDetailPage({
           <article key={p.id} className={styles.projectRow}>
             <div className={styles.thumb}>
               <Image
-                src={pickBrandThumb(p.image_event)}
+                src={pickBrandThumb(p.image_event, isMobile)}
                 alt={p.title ?? "Project"}
                 width={360}
                 height={360}

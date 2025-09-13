@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./Collections.module.scss";
 
-import { asKind, getCollection, hrefOf, pickHover } from "@/lib/api";
+import { asKind, getCollection, hrefOf, pickHover, isMobileFromHeaders } from "@/lib/api";
 import type { CollectionItem, CollectionKind } from "@/types";
 import { notFound } from "next/navigation";
 
@@ -59,28 +59,32 @@ const UI: Record<
 export async function generateMetadata({
   params,
 }: {
-  params: { collection: string };
+  params: Promise<{ collection: string }>;
 }): Promise<Metadata> {
-  const kind = asKind(params.collection);
+  const { collection } = await params;
+  const kind = asKind(collection);
   if (!kind) return { title: "Not Found" };
   const ttl = kind[0].toUpperCase() + kind.slice(1);
   return {
     title: `${ttl} | 19sixtyfive`,
-    alternates: { canonical: `/${params.collection}` },
+    alternates: { canonical: `/${collection}` },
   };
 }
 
 export default async function ListPage({
   params,
 }: {
-  params: { collection: string };
+  params: Promise<{ collection: string }>;
 }) {
-  const raw = params.collection;
+  const { collection } = await params;
+  const raw = collection;
   const kind = asKind(raw);
   if (!kind) return notFound();
 
   const ui = UI[kind];
-  const items = await getCollection(kind);
+  // Detect mobile from request headers
+  const isMobile = await isMobileFromHeaders();
+  const items = await getCollection(kind, isMobile);
 
   return (
     <>
@@ -115,7 +119,7 @@ export default async function ListPage({
             <figure key={it.id} className={styles.frameItem}>
               <div className={styles.frameImg}>
                 <Image
-                  src={pickHover(it.image_hover ?? null)}
+                  src={pickHover(it.image_hover ?? null, isMobile)}
                   alt={it.title ?? "Untitled"}
                   width={350}
                   height={350}
