@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./News.module.scss";
@@ -32,16 +32,19 @@ export default function NewsClient({ items, filters, slides }: Props) {
 
   const canLoadMore = visible < filtered.length;
 
+  // Filter out empty slide URLs
+  const validSlides = slides.filter(src => src);
+
   // ----- Simple carousel -----
   const [slide, setSlide] = useState(0);
   const timer = useRef<number | null>(null);
   
-  const startTimer = () => {
+  const startTimer = useCallback(() => {
     if (timer.current) window.clearInterval(timer.current);
     timer.current = window.setInterval(() => {
-      setSlide((s) => (s + 1) % slides.length);
+      setSlide((s) => (s + 1) % validSlides.length);
     }, 5000);
-  };
+  }, [validSlides.length]);
   
   const stopTimer = () => {
     if (timer.current) {
@@ -53,7 +56,7 @@ export default function NewsClient({ items, filters, slides }: Props) {
   useEffect(() => {
     startTimer();
     return stopTimer;
-  }, [slides.length]);
+  }, [startTimer]);
   
   const goToSlide = (index: number) => {
     setSlide(index);
@@ -92,18 +95,18 @@ export default function NewsClient({ items, filters, slides }: Props) {
           <div
             className={styles.carouselContainer}
             style={{
-              width: `${slides.length * 100}%`,
+              width: `${validSlides.length * 100}%`,
               transform: `translateX(-${100 * slide}%)`,
             }}
           >
-            {slides.map((src, i) => (
+            {validSlides.map((src, i) => (
               <div 
                 key={i} 
                 className={styles.carouselSlide}
                 style={{ width: "100%" }}
               >
                 <Image
-                  src={src || "/images/placeholders/placeholder.png"}
+                  src={src}
                   alt={`Slide ${i + 1}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 100vw"
@@ -114,7 +117,7 @@ export default function NewsClient({ items, filters, slides }: Props) {
           </div>
 
           <div className={styles.carouselDots}>
-            {slides.map((_, i) => (
+            {validSlides.map((_, i) => (
               <button
                 key={i}
                 className={`${styles.dot} ${i === slide ? styles.active : ""}`}

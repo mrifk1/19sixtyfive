@@ -145,38 +145,29 @@ export function hrefOf(kind: string, it: CollectionItem) {
 }
 
 /* ==============================
- * Image helpers (desktop vs mobile + placeholders)
+ * Image helpers (desktop vs mobile)
  * ============================== */
-/** All placeholders are directed to one file to avoid 404 errors. */
-const FALLBACK = "/images/placeholders/placeholder.png";
-export const PLACEHOLDER = {
-  hero: FALLBACK,
-  logo: FALLBACK,
-  square: FALLBACK,
-  banner: FALLBACK,
-  thumb: FALLBACK,
-};
 
 export function pickImageSrc(
   img?: DeviceImage | null,
   prefer: "desktop" | "mobile" = "desktop"
 ): string {
-  if (!img) return PLACEHOLDER.square;
+  if (!img) return "";
   const primary = img[prefer];
   if (primary) return primary;
   const alt = prefer === "desktop" ? img.mobile : img.desktop;
   if (alt) return alt;
-  return img.thumbnail ?? PLACEHOLDER.square;
+  return img.thumbnail ?? "";
 }
 
 export const pickHero = (img?: DeviceImage | null, isMobile = false) =>
-  pickImageSrc(img, isMobile ? "mobile" : "desktop") || PLACEHOLDER.hero;
+  pickImageSrc(img, isMobile ? "mobile" : "desktop");
 export const pickLogo = (img?: DeviceImage | null) =>
-  pickImageSrc(img, "desktop") || PLACEHOLDER.logo;
+  pickImageSrc(img, "desktop");
 export const pickHover = (img?: DeviceImage | null, isMobile = false) =>
-  pickImageSrc(img, isMobile ? "mobile" : "desktop") || PLACEHOLDER.thumb;
+  pickImageSrc(img, isMobile ? "mobile" : "desktop");
 export const pickBanner = (img?: DeviceImage | null, isMobile = false) =>
-  pickImageSrc(img, isMobile ? "mobile" : "desktop") || PLACEHOLDER.banner;
+  pickImageSrc(img, isMobile ? "mobile" : "desktop");
 
 /* ==============================
  * Brands (+ projects)
