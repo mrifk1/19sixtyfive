@@ -12,6 +12,11 @@ export const metadata: Metadata = {
   title: "19sixtyfive",
   description: "Experiences flipped our way.",
   metadataBase: new URL("https://19sixtyfive.com.sg"),
+  icons: {
+    icon: "/images/logo/logo.svg",
+    shortcut: "/images/logo/logo.svg",
+    apple: "/images/logo/logo.svg",
+  },
 };
 
 export default function RootLayout({

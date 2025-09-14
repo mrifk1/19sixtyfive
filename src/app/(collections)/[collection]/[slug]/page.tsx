@@ -8,6 +8,7 @@ import {
   asKind,
   getCollection,
   getItemBySlug,
+  getCollectionItemById,
   isMobileFromHeaders,
   orderByDisplay,
   prevNext,
@@ -64,14 +65,28 @@ export default async function DetailPage({
   ]);
   if (!item) return notFound();
 
+  // Fetch detail by ID untuk increment view count di backend
+  // Kita tetap pakai item dari getItemBySlug untuk fallback case,
+  // tapi coba fetch detail by ID untuk update view count
+  let detailItem = item;
+  try {
+    const fetchedDetail = await getCollectionItemById(kind, item.id, isMobile);
+    if (fetchedDetail) {
+      detailItem = fetchedDetail;
+    }
+  } catch (error) {
+    // Jika gagal fetch detail, tetap pakai item original
+    console.error('Failed to fetch detail by ID, using original item:', error);
+  }
+
   const ordered = orderByDisplay(list);
   const pn = prevNext(ordered, item);
 
-  const hero = pickHero(item.image_hero ?? null, isMobile);
-  const logo = pickLogo(item.image_logo ?? null);
-  const img1 = pickImageSrc(item.image_1 ?? null, isMobile ? "mobile" : "desktop");
-  const img2 = pickImageSrc(item.image_2 ?? null, isMobile ? "mobile" : "desktop");
-  const banner = pickBanner(item.image_banner ?? null, isMobile);
+  const hero = pickHero(detailItem.image_hero ?? null, isMobile);
+  const logo = pickLogo(detailItem.image_logo ?? null);
+  const img1 = pickImageSrc(detailItem.image_1 ?? null, isMobile ? "mobile" : "desktop");
+  const img2 = pickImageSrc(detailItem.image_2 ?? null, isMobile ? "mobile" : "desktop");
+  const banner = pickBanner(detailItem.image_banner ?? null, isMobile);
 
   const galleryKeys = Array.from(
     { length: 8 },
@@ -79,7 +94,7 @@ export default async function DetailPage({
   );
   const gallery: GalleryItem[] = galleryKeys
     .map((k, i) => {
-      const img = item[k];
+      const img = detailItem[k];
       return img ? { key: i, src: pickImageSrc(img, "desktop") } : null;
     })
     .filter(Boolean) as GalleryItem[];
@@ -131,9 +146,9 @@ export default async function DetailPage({
             width={180}
             height={90}
           />
-          {item.website_link && (
+          {detailItem.website_link && (
             <a
-              href={item.website_link}
+              href={detailItem.website_link}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -144,9 +159,9 @@ export default async function DetailPage({
       </section>
 
       <section className={styles.contentSection}>
-        <h1 className={styles.detailsTitle}>{item.title ?? "Untitled"}</h1>
-        {item.description ? (
-          <p dangerouslySetInnerHTML={{ __html: item.description }} />
+        <h1 className={styles.detailsTitle}>{detailItem.title ?? "Untitled"}</h1>
+        {detailItem.description ? (
+          <p dangerouslySetInnerHTML={{ __html: detailItem.description }} />
         ) : null}
         <div className={styles.images}>
           <Image src={img1} alt="Secondary 1" width={400} height={400} />

@@ -6,6 +6,7 @@ import {
   getBrandBySlug,
   getBrandProjects,
   getProjectBySlug,
+  getBrandProjectById,
   orderProjects,
   prevNextProject,
   pickProjectHero,
@@ -68,14 +69,28 @@ export default async function ProjectDetailPage({
   ]);
   if (!proj) return notFound();
 
+  // Fetch detail by ID untuk increment view count di backend
+  // Kita tetap pakai proj dari getProjectBySlug untuk fallback case,
+  // tapi coba fetch detail by ID untuk update view count
+  let detailProj = proj;
+  try {
+    const fetchedDetail = await getBrandProjectById(proj.id, isMobile);
+    if (fetchedDetail) {
+      detailProj = fetchedDetail;
+    }
+  } catch (error) {
+    // Jika gagal fetch detail, tetap pakai proj original
+    console.error('Failed to fetch project detail by ID, using original proj:', error);
+  }
+
   const ordered = orderProjects(list);
   const pn = prevNextProject(ordered, proj);
 
-  const hero = pickProjectHero(proj.image_hero ?? null, isMobile);
-  const logo = pickProjectLogo(proj.image_logo ?? null);
-  const img1 = pickImageSrc(proj.image_1 ?? null, isMobile ? "mobile" : "desktop");
-  const img2 = pickImageSrc(proj.image_2 ?? null, isMobile ? "mobile" : "desktop");
-  const banner = pickProjectBanner(proj.image_banner ?? null, isMobile);
+  const hero = pickProjectHero(detailProj.image_hero ?? null, isMobile);
+  const logo = pickProjectLogo(detailProj.image_logo ?? null);
+  const img1 = pickImageSrc(detailProj.image_1 ?? null, isMobile ? "mobile" : "desktop");
+  const img2 = pickImageSrc(detailProj.image_2 ?? null, isMobile ? "mobile" : "desktop");
+  const banner = pickProjectBanner(detailProj.image_banner ?? null, isMobile);
 
   const galleryKeys = [
     "image_gallery_1",
@@ -90,7 +105,7 @@ export default async function ProjectDetailPage({
 
   const gallery: GalleryItem[] = galleryKeys
     .map((k, i) => {
-      const img = proj[k];
+      const img = detailProj[k];
       return img ? { key: i, src: pickImageSrc(img, isMobile ? "mobile" : "desktop") } : null;
     })
     .filter(Boolean) as GalleryItem[];
@@ -143,9 +158,9 @@ export default async function ProjectDetailPage({
             width={180}
             height={90}
           />
-          {proj.website_link && (
+          {detailProj.website_link && (
             <a
-              href={proj.website_link}
+              href={detailProj.website_link}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -157,9 +172,9 @@ export default async function ProjectDetailPage({
 
       {/* ===== Content ===== */}
       <section className={styles.contentSection}>
-        <h1 className={styles.detailsTitle}>{proj.title ?? "Untitled"}</h1>
-        {proj.description ? (
-          <p dangerouslySetInnerHTML={{ __html: proj.description }} />
+        <h1 className={styles.detailsTitle}>{detailProj.title ?? "Untitled"}</h1>
+        {detailProj.description ? (
+          <p dangerouslySetInnerHTML={{ __html: detailProj.description }} />
         ) : null}
         <div className={styles.images}>
           <Image src={img1} alt="Secondary 1" width={400} height={400} />

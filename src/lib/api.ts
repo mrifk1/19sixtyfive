@@ -292,3 +292,50 @@ export function buildNewsFilters(items: NewsItem[]) {
     a.slug === "all" ? -1 : b.slug === "all" ? 1 : a.name.localeCompare(b.name)
   );
 }
+
+/* ==============================
+ * Detail by ID (untuk increment view count)
+ * ============================== */
+
+/**
+ * Fetch collection item detail by ID
+ * Ini akan hit endpoint detail yang increment view count di backend
+ */
+export async function getCollectionItemById(
+  kind: CollectionKind,
+  id: string,
+  isMobile: boolean = false
+): Promise<CollectionItem | null> {
+  try {
+    const data = await apiGet<CollectionItem>(`/${kind}/${id}`, {
+      revalidate: 0, // Always fresh untuk increment view count
+      tags: ["collection-detail", `${kind}:${id}`],
+      isMobile,
+    });
+    return data;
+  } catch (error) {
+    console.error(`Failed to fetch ${kind} detail for ID ${id}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Fetch brand project detail by ID  
+ * Ini akan hit endpoint detail yang increment view count di backend
+ */
+export async function getBrandProjectById(
+  projectId: string,
+  isMobile: boolean = false
+): Promise<BrandProject | null> {
+  try {
+    const data = await apiGet<BrandProject>(`${BRAND_DETAIL_BASE}/${projectId}`, {
+      revalidate: 0, // Always fresh untuk increment view count
+      tags: ["brand-project-detail", `project:${projectId}`],
+      isMobile,
+    });
+    return data;
+  } catch (error) {
+    console.error(`Failed to fetch brand project detail for ID ${projectId}:`, error);
+    return null;
+  }
+}
