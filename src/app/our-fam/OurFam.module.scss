@@ -229,8 +229,8 @@
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 1rem;
+    justify-content: center;
+    padding: 0;
 
     :global(img) {
       width: 150px;
@@ -240,7 +240,7 @@
 
   .banner {
     height: 45rem;
-    clip-path: polygon(0 0, 100% 0, 100% 90%, 88% 100%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 83% 100%, 0 100%);
 
     .bannerContent {
       position: relative;
@@ -278,11 +278,11 @@
       font: $font-mobile-dm-400-14;
       pointer-events: auto;
       color: $color-primary;
-      text-decoration: none;
+      text-decoration: underline;
     }
   }
 
   .bannerSecond {
-    clip-path: polygon(100% 100%, 0 100%, 0 15%, 12% 0, 100% 0);
+    clip-path: polygon(100% 100%, 0 100%, 0 10%, 20% 0, 100% 0);
   }
 }

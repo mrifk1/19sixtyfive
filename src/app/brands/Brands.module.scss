@@ -401,8 +401,12 @@
       :global(a) {
         font: $font-mobile-dm-400-20;
         &::after {
-          width: 1.5rem !important;
-          height: 1.5rem !important;
+          width: 1.3rem !important;
+          height: 1.3rem !important;
+        }
+        &:hover::after {
+          width: 1rem !important;
+          height: 1rem !important;
         }
       }
     }
@@ -514,6 +518,7 @@
     .contentSection {
       gap: 2rem;
       padding: $page-mobile-normal;
+      margin: 0;
 
       p {
         width: 70%;
@@ -526,13 +531,18 @@
       }
 
       .images {
-        justify-content: space-between;
+        justify-content: center;
+        padding: 0;
 
         :global(img) {
           width: 150px;
           height: 150px;
         }
       }
+    }
+
+    .bannerSection {
+      clip-path: polygon(0 8%, 20% 0, 100% 0, 100% 100%, 0 100%);
     }
 
     .galleryRow {

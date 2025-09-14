@@ -385,12 +385,16 @@
       width: 100%;
       padding: 0;
       margin: 0;
+
       :global(a) {
         font: $font-mobile-dm-400-20;
-
         &::after {
-          width: 1.5rem !important;
-          height: 1.5rem !important;
+          width: 1.3rem !important;
+          height: 1.3rem !important;
+        }
+        &:hover::after {
+          width: 1rem !important;
+          height: 1rem !important;
         }
       }
     }
@@ -399,7 +403,7 @@
   /* ----- Collections Detail Mobile ----- */
   .heroSection {
     padding: $page-mobile-normal;
-    clip-path: polygon(0 0, 100% 0, 100% 91%, 85% 100%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 91%, 82% 100%, 0 100%);
   }
 
   .heroNavigation {
@@ -439,9 +443,11 @@
   .contentSection {
     gap: 2rem;
     padding: $page-mobile-normal;
+    margin: 0;
 
     .images {
-      justify-content: space-between;
+      padding: 0;
+      justify-content: center;
     }
 
     p {
@@ -458,6 +464,10 @@
       width: 150px;
       height: 150px;
     }
+  }
+
+  .bannerSection {
+    clip-path: polygon(0 8%, 20% 0, 100% 0, 100% 100%, 0 100%);
   }
 
   .navBtn {
