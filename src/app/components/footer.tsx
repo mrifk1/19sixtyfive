@@ -26,10 +26,10 @@ export default function Footer() {
             <Link href="/community">Community</Link>
           </li>
           <li>
-            <Link href="/artist-spotlight">Artist Spotlight</Link>
+            <Link href="/artist">Artist</Link>
           </li>
           <li>
-            <Link href="/brands-collab">Brands Collab</Link>
+            <Link href="/brands">Brands</Link>
           </li>
         </ul>
         <ul className={`${styles.list} ${styles.right}`}>
@@ -40,7 +40,7 @@ export default function Footer() {
             <Link href="/news">News</Link>
           </li>
           <li>
-            <Link href="/our-fam">Our Fam</Link>
+            <Link href="/fam">Fam</Link>
           </li>
           <li>
             <Link href="#">Youtube</Link>

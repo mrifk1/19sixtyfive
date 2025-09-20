@@ -264,8 +264,9 @@
   }
 
   .newsFilterList {
+    flex-wrap: wrap;
     li a {
-      font: v.$font-mobile-dm-400-20;
+      font: v.$font-mobile-dm-400-14;
     }
   }
   .filterCount {
@@ -304,22 +305,26 @@
     padding: 0;
     order: 2;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     height: 2rem;
 
     &::after {
       content: "";
       width: 1rem;
-      height: 1rem;
+      height: 0.9rem;
       background-image: url("/images/icon/arrow-black.svg");
       background-size: contain;
     }
   }
 
-  .newsText h1 {
-    font: v.$font-mobile-dm-400-14;
-    opacity: 0.7;
+  .newsText {
+    width: 50%;
+
+    h1 {
+      font: v.$font-mobile-dm-400-14;
+      opacity: 0.7;
+    }
   }
   .newsTitle {
     width: 100%;

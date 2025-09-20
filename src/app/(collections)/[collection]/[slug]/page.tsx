@@ -65,9 +65,9 @@ export default async function DetailPage({
   ]);
   if (!item) return notFound();
 
-  // Fetch detail by ID untuk increment view count di backend
-  // Kita tetap pakai item dari getItemBySlug untuk fallback case,
-  // tapi coba fetch detail by ID untuk update view count
+  // Fetch detail by ID to increment the view count in the backend
+  // We still use the item from getItemBySlug as a fallback,
+  // but try fetching the detail by ID to update the view count
   let detailItem = item;
   try {
     const fetchedDetail = await getCollectionItemById(kind, item.id, isMobile);
@@ -75,7 +75,7 @@ export default async function DetailPage({
       detailItem = fetchedDetail;
     }
   } catch (error) {
-    // Jika gagal fetch detail, tetap pakai item original
+    // If fetching detail fails, continue using the original item
     console.error('Failed to fetch detail by ID, using original item:', error);
   }
 

@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   description: "Experiences flipped our way.",
   metadataBase: new URL("https://19sixtyfive.com.sg"),
   icons: {
-    icon: "/images/logo/logo.svg",
-    shortcut: "/images/logo/logo.svg",
-    apple: "/images/logo/logo.svg",
+    icon: "/images/logo/logo-white.svg",
+    shortcut: "/images/logo/logo-white.svg",
+    apple: "/images/logo/logo-white.svg",
   },
 };
 

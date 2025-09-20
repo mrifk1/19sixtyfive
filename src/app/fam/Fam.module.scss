@@ -12,7 +12,7 @@
   margin: 0;
 }
 
-/* ===== HERO IMAGE (maps .hero__img.hero-our-fam) ===== */
+/* ===== HERO IMAGE (maps .hero__img.hero-fam) ===== */
 .heroImage {
   width: 100%;
   height: 45rem;
@@ -23,7 +23,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background-image: url("/images/our-fam/hero.png");
+  background-image: url("/images/fam/hero.png");
 }
 
 /* ===== ABOUT (maps .hero__subtitle) ===== */
@@ -135,15 +135,15 @@
 
 /* exact clip-path + bg images */
 .bannerFirst {
-  background-image: url("/images/our-fam/banner-first.png");
+  background-image: url("/images/fam/banner-first.png");
   clip-path: polygon(0 0, 100% 0, 100% 87%, 94% 100%, 0 100%);
 }
 .bannerSecond {
-  background-image: url("/images/our-fam/banner-second.png");
+  background-image: url("/images/fam/banner-second.png");
   clip-path: polygon(100% 100%, 0 100%, 0 12%, 6% 0, 100% 0);
 }
 .bannerThird {
-  background-image: url("/images/our-fam/banner-third.png");
+  background-image: url("/images/fam/banner-third.png");
   clip-path: polygon(0 0, 100% 0, 100% 87%, 94% 100%, 0 100%);
 }
 
@@ -284,5 +284,10 @@
 
   .bannerSecond {
     clip-path: polygon(100% 100%, 0 100%, 0 10%, 20% 0, 100% 0);
+  }
+
+  .bannerThird {
+    clip-path: polygon(100% 100%, 0 100%, 0 10%, 20% 0, 100% 0);
+    background-image: url("/images/fam/banner-third-mobile.png");
   }
 }

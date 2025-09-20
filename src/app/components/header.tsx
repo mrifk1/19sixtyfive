@@ -133,13 +133,13 @@ export default function Header() {
               </Link>
             </li>
             <li>
-              <Link href="/artist-spotlight" onClick={() => setMenuOpen(false)}>
-                Artist Spotlight
+              <Link href="/artist" onClick={() => setMenuOpen(false)}>
+                Artist
               </Link>
             </li>
             <li>
-              <Link href="/brands-collab" onClick={() => setMenuOpen(false)}>
-                Brands Collab
+              <Link href="/brands" onClick={() => setMenuOpen(false)}>
+                Brands
               </Link>
             </li>
             <li>
@@ -153,8 +153,8 @@ export default function Header() {
               </Link>
             </li>
             <li>
-              <Link href="/our-fam" onClick={() => setMenuOpen(false)}>
-                Our Fam
+              <Link href="/fam" onClick={() => setMenuOpen(false)}>
+                Fam
               </Link>
             </li>
           </ul>

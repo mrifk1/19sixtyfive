@@ -1,8 +1,8 @@
-import styles from "./OurFam.module.scss";
+import styles from "./Fam.module.scss";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function OurFamPage() {
+export default function FamPage() {
   return (
     <>
       {/* HERO TITLE (single h1 for semantics) */}
@@ -13,7 +13,7 @@ export default function OurFamPage() {
         </h1>
       </section>
 
-      {/* HERO IMAGE (matches .hero__img.hero-our-fam) */}
+      {/* HERO IMAGE (matches .hero__img.hero-fam) */}
       <section className={styles.heroImage} />
 
       {/* ABOUT (matches .hero__subtitle) */}
@@ -39,7 +39,7 @@ export default function OurFamPage() {
         <div className={styles.bannerContent}>
           <div className={styles.bannerInfo}>
             <Image
-              src="/images/our-fam/logo-first.svg"
+              src="/images/fam/logo-first.svg"
               alt="24owls logo"
               width={200}
               height={80}
@@ -70,13 +70,13 @@ export default function OurFamPage() {
         </p>
         <div className={styles.contentImages}>
           <Image
-            src="/images/our-fam/first-content-first.png"
+            src="/images/fam/first-content-first.png"
             alt="singer singing on stage"
             width={400}
             height={400}
           />
           <Image
-            src="/images/our-fam/first-content-second.png"
+            src="/images/fam/first-content-second.png"
             alt="band rocking on a stage"
             width={400}
             height={400}
@@ -99,7 +99,7 @@ export default function OurFamPage() {
         <div className={styles.bannerContent}>
           <div className={styles.bannerInfo}>
             <Image
-              src="/images/our-fam/logo-second.png"
+              src="/images/fam/logo-second.png"
               alt="65 logo"
               width={200}
               height={80}
@@ -128,13 +128,13 @@ export default function OurFamPage() {
         </p>
         <div className={styles.contentImages}>
           <Image
-            src="/images/our-fam/second-content-first.png"
+            src="/images/fam/second-content-first.png"
             alt="Alicia Pan"
             width={400}
             height={400}
           />
           <Image
-            src="/images/our-fam/second-content-second.png"
+            src="/images/fam/second-content-second.png"
             alt="a Woman Playing Piano Smiling"
             width={400}
             height={400}
@@ -157,7 +157,7 @@ export default function OurFamPage() {
         <div className={styles.bannerContent}>
           <div className={styles.bannerInfo}>
             <Image
-              src="/images/our-fam/logo-third.svg"
+              src="/images/fam/logo-third.svg"
               alt="Tangent Moves Logo"
               width={200}
               height={80}
@@ -186,13 +186,13 @@ export default function OurFamPage() {
         </p>
         <div className={styles.contentImages}>
           <Image
-            src="/images/our-fam/third-content-first.png"
+            src="/images/fam/third-content-first.png"
             alt="The Wondrous Path"
             width={400}
             height={400}
           />
           <Image
-            src="/images/our-fam/third-content-second.png"
+            src="/images/fam/third-content-second.png"
             alt="Flock Lorong Boys"
             width={400}
             height={400}

@@ -82,9 +82,7 @@ export async function apiGet<T>(path: string, opts: GetOpts = {}): Promise<T> {
 const KIND_MAP: Record<string, CollectionKind> = {
   festival: "festival",
   community: "community",
-  artist: "artist",
-  "artist-spotlight": "artist", // alias
-  sport: "sport",
+  artist: "artist",  sport: "sport",
   sports: "sport", // alias
 };
 
@@ -294,12 +292,12 @@ export function buildNewsFilters(items: NewsItem[]) {
 }
 
 /* ==============================
- * Detail by ID (untuk increment view count)
+ * Detail by ID (to increment view count)
  * ============================== */
 
 /**
  * Fetch collection item detail by ID
- * Ini akan hit endpoint detail yang increment view count di backend
+ * This will call the detail endpoint which increments the view count in the backend
  */
 export async function getCollectionItemById(
   kind: CollectionKind,
@@ -308,7 +306,7 @@ export async function getCollectionItemById(
 ): Promise<CollectionItem | null> {
   try {
     const data = await apiGet<CollectionItem>(`/${kind}/${id}`, {
-      revalidate: 0, // Always fresh untuk increment view count
+      revalidate: 0, // Always fresh to ensure view count is incremented
       tags: ["collection-detail", `${kind}:${id}`],
       isMobile,
     });
@@ -320,8 +318,8 @@ export async function getCollectionItemById(
 }
 
 /**
- * Fetch brand project detail by ID  
- * Ini akan hit endpoint detail yang increment view count di backend
+ * Fetch brand project detail by ID
+ * This will call the detail endpoint which increments the view count in the backend
  */
 export async function getBrandProjectById(
   projectId: string,
@@ -329,7 +327,7 @@ export async function getBrandProjectById(
 ): Promise<BrandProject | null> {
   try {
     const data = await apiGet<BrandProject>(`${BRAND_DETAIL_BASE}/${projectId}`, {
-      revalidate: 0, // Always fresh untuk increment view count
+      revalidate: 0, // Always fresh to ensure view count is incremented
       tags: ["brand-project-detail", `project:${projectId}`],
       isMobile,
     });

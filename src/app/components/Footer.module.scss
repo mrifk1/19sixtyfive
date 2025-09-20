@@ -67,16 +67,14 @@
 
     .logo img {
       width: 60px;
-      height: auto;
+      height: 60px;
     }
 
     .column1 {
       height: auto;
+      width: 100%;
       .list {
         gap: $section-medium;
-      }
-      .logo img {
-        width: 80px;
       }
     }
 

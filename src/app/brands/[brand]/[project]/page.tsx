@@ -69,9 +69,9 @@ export default async function ProjectDetailPage({
   ]);
   if (!proj) return notFound();
 
-  // Fetch detail by ID untuk increment view count di backend
-  // Kita tetap pakai proj dari getProjectBySlug untuk fallback case,
-  // tapi coba fetch detail by ID untuk update view count
+  // Fetch detail by ID to increment the view count in the backend
+  // We still use the project from getProjectBySlug as a fallback,
+  // but try fetching the detail by ID to update the view count
   let detailProj = proj;
   try {
     const fetchedDetail = await getBrandProjectById(proj.id, isMobile);
@@ -79,7 +79,7 @@ export default async function ProjectDetailPage({
       detailProj = fetchedDetail;
     }
   } catch (error) {
-    // Jika gagal fetch detail, tetap pakai proj original
+    // If fetching detail fails, continue using the original project
     console.error('Failed to fetch project detail by ID, using original proj:', error);
   }
 

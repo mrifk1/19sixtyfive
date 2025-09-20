@@ -14,8 +14,8 @@ export default function NotFound() {
     backUrl = "/community";
   } else if (pathname.startsWith("/sports")) {
     backUrl = "/sports";
-  } else if (pathname.startsWith("/artist-spotlight")) {
-    backUrl = "/artist-spotlight";
+  } else if (pathname.startsWith("/artist")) {
+    backUrl = "/artist";
   }
 
   return (

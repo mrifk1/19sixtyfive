@@ -141,14 +141,14 @@ export default function NewsClient({ items, filters, slides }: Props) {
               >
                 <div className={styles.newsContentWrapper}>
                   <div className={styles.newsText}>
-                    <h1>{n.media_name || n.artist || "Press"}</h1>
+                    <h1>{n.media_name}</h1>
                   </div>
                   <div className={styles.newsText}>
-                    <h1>{n.artist || "Press"}</h1>
+                    <h1>{n.artist}</h1>
                   </div>
                 </div>
                 <div className={styles.newsTitle}>
-                  <h1>{n.title || "Untitled"}</h1>
+                  <h1>{n.title}</h1>
                 </div>
                 <div className={styles.newsArrow} aria-hidden="true" />
               </a>
