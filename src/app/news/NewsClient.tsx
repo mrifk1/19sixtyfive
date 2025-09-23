@@ -38,25 +38,26 @@ export default function NewsClient({ items, filters, slides }: Props) {
   // ----- Simple carousel -----
   const [slide, setSlide] = useState(0);
   const timer = useRef<number | null>(null);
-  
   const startTimer = useCallback(() => {
+    if (!validSlides.length) return;
     if (timer.current) window.clearInterval(timer.current);
     timer.current = window.setInterval(() => {
       setSlide((s) => (s + 1) % validSlides.length);
     }, 5000);
   }, [validSlides.length]);
-  
-  const stopTimer = () => {
+
+  const stopTimer = useCallback(() => {
     if (timer.current) {
       window.clearInterval(timer.current);
       timer.current = null;
     }
-  };
-  
+  }, []);
+
+  // Start carousel timer on mount
   useEffect(() => {
     startTimer();
-    return stopTimer;
-  }, [startTimer]);
+    return () => stopTimer();
+  }, [startTimer, stopTimer]);
   
   const goToSlide = (index: number) => {
     setSlide(index);
@@ -76,6 +77,12 @@ export default function NewsClient({ items, filters, slides }: Props) {
                 onClick={(e) => {
                   e.preventDefault();
                   setActive(f.slug);
+                  // Advance the carousel by 1 slide (wrap around) on every filter click
+                  if (validSlides.length) {
+                    setSlide((s) => (s + 1) % validSlides.length);
+                    stopTimer();
+                    setTimeout(startTimer, 1000);
+                  }
                 }}
                 className={active === f.slug ? styles.active : ""}
                 aria-current={active === f.slug ? "true" : undefined}
