@@ -257,59 +257,6 @@
   }
 }
 
-/* ================= RESPONSIVE ================= */
-@include respond("tablet") {
-  .hero {
-    padding: 3rem;
-    .heroTitle {
-      font: $font-tablet-dm-400-36;
-    }
-    .heroText {
-      font: $font-tablet-montserrat-500-14;
-    }
-  }
-
-  .banner {
-    height: 42rem;
-
-    .bannerContent {
-      padding: 3rem 4rem;
-      align-items: flex-end;
-      gap: 0.75rem;
-
-      h2 {
-        font: $font-tablet-dm-400-36;
-      }
-      .bannerCta {
-        font: $font-tablet-dm-400-18;
-      }
-    }
-  }
-
-  .frame {
-    .right {
-      margin-right: 4rem;
-      margin-top: -8rem;
-
-      figcaption {
-        width: 50%;
-        margin-left: -4rem;
-      }
-    }
-
-    .frameImg {
-      width: 22rem;
-    }
-    .right .frameImg {
-      width: 16rem;
-    }
-  }
-
-  .brands .brandItem {
-    width: 18rem;
-  }
-}
-
 @include respond("mobile") {
   .hero {
     margin-top: -4rem;
@@ -327,6 +274,13 @@
 
   .banner {
     height: 40rem;
+
+    &.first {
+      background-image: url("/images/home/banner-first-mobile.png");
+    }
+    &.second {
+      background-image: url("/images/home/banner-second-mobile.png");
+    }
 
     .bannerContent {
       flex-direction: column;
@@ -405,4 +359,3 @@
     }
   }
 }
-

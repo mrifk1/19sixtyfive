@@ -344,6 +344,11 @@
 
 @include m.respond("mobile") {
   /* ----- Collections Index Mobile ----- */
+
+  .hero-sports {
+    background-image: url("/images/sports/hero-mobile.png");
+  }
+
   .heroTitle {
     padding: 1rem 4rem 2rem 2rem;
 
