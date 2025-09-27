@@ -29,9 +29,10 @@ export default async function NewsPage() {
   const filters = buildNewsFilters(items);
 
   const slides = [
-    "/images/news/carousel-1.png",
-    "/images/news/carousel-2.png",
-    "/images/news/carousel-3.png",
+    "/images/news/01-All.png",
+    "/images/news/02-All The Buzz.png",
+    "/images/news/03-Artist News.png",
+    "/images/news/04-Festivals.png",
   ];
 
   return (

@@ -2,13 +2,16 @@
 @use "../styles/mixins" as *;
 
 /* ================= HERO ================= */
+
 .hero {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   text-align: center;
   gap: $section-medium;
-  padding: 4rem 4rem 8rem;
+  padding: 0;
+  min-height: calc(100vh - 96px);
   background-color: $color-primary;
 
   img {
@@ -260,6 +263,7 @@
 @include respond("mobile") {
   .hero {
     margin-top: -4rem;
+    min-height: calc(67vh - 96px);
     img {
       width: 6rem;
     }
@@ -267,7 +271,7 @@
       font: $font-mobile-dm-400-32;
     }
     .heroText {
-      width: 90%;
+      width: 75%;
       font: $font-mobile-montserrat-500-12;
     }
   }

@@ -1,0 +1,92 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as m;
+
+/* ================= VIDEO SECTION ================= */
+.videoSection {
+  margin: 2rem 0rem 8rem 0rem;
+  display: block;
+  width: 100vw;
+  position: relative;
+
+  .video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0;
+    background: #000;
+    object-fit: cover;
+  }
+
+  /* desktop by default: mobile source hidden via component logic */
+  .mobile {
+    display: none;
+  }
+
+  .videoOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0); /* hidden by default */
+    transition: background 200ms ease;
+    pointer-events: none;
+  }
+
+  .playPauseButton {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.45);
+    border: none;
+    padding: 0.4rem;
+    border-radius: 999px;
+    display: none; /* hidden by default, shown on hover */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 4;
+  }
+
+  /* show overlay and button on hover */
+  .videoWrapper:hover .videoOverlay {
+    background: rgba(0, 0, 0, 0.45);
+  }
+  .videoWrapper:hover .playPauseButton {
+    display: flex;
+  }
+}
+
+@include m.respond("mobile") {
+  .videoSection {
+    margin: 2rem 0 6rem 0; /* maintain 2rem on mobile too */
+
+    .video {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    /* show mobile, hide desktop */
+    .mobile {
+      display: block;
+    }
+    .desktop {
+      display: none;
+    }
+
+    /* On mobile, hide the button and keep overlay transparent (no hover on touch) */
+    .videoWrapper .playPauseButton {
+        display: none;
+    }
+    .videoWrapper .videoOverlay {
+      background: rgba(0, 0, 0, 0);
+    }
+  }
+
+    /* Mobile tweaks: smaller play button */
+    .videoWrapper .playPauseButton {
+      padding: 0.2rem;
+    }
+    .videoWrapper .playPauseButton img {
+      width: 40px !important;
+      height: 40px !important;
+    }
+}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./Home.module.scss";
+import VideoPlayer from "./components/VideoPlayer";
 import Image from "next/image";
 
 export default function HomePage() {
@@ -26,6 +27,9 @@ export default function HomePage() {
           happen our own way.
         </p>
       </section>
+
+
+      <VideoPlayer />
 
       {/* BANNER — FESTIVALS */}
       <section className={`${styles.banner} ${styles.first}`}>

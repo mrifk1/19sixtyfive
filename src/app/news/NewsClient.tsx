@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect, useRef, useCallback } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./News.module.scss";
@@ -16,11 +16,24 @@ type Props = {
 
 const PER_PAGE = 5;
 
+function normalize(s: string) {
+  return (s || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "") // strip diacritics
+    .replace(/[^a-z0-9]+/g, "-"); // non-alnum -> dash
+}
+
+function basename(p: string) {
+  const q = p.split("?")[0].split("#")[0];
+  return q.substring(q.lastIndexOf("/") + 1);
+}
+
 export default function NewsClient({ items, filters, slides }: Props) {
   const [active, setActive] = useState<string>("all");
   const [visible, setVisible] = useState(PER_PAGE);
+  const [slide, setSlide] = useState(0);
 
-  // Reset visible when filter changes
   useEffect(() => setVisible(PER_PAGE), [active]);
 
   const filtered = useMemo(() => {
@@ -32,37 +45,48 @@ export default function NewsClient({ items, filters, slides }: Props) {
 
   const canLoadMore = visible < filtered.length;
 
-  // Filter out empty slide URLs
-  const validSlides = slides.filter(src => src);
+  // 1) Preprocess slide filenames for matching
+  const slideKeys = useMemo(
+    () =>
+      slides.filter(Boolean).map((src) => ({
+        src,
+        key: normalize(basename(src)), 
+      })),
+    [slides]
+  );
 
-  // ----- Simple carousel -----
-  const [slide, setSlide] = useState(0);
-  const timer = useRef<number | null>(null);
-  const startTimer = useCallback(() => {
-    if (!validSlides.length) return;
-    if (timer.current) window.clearInterval(timer.current);
-    timer.current = window.setInterval(() => {
-      setSlide((s) => (s + 1) % validSlides.length);
-    }, 5000);
-  }, [validSlides.length]);
+  // 2) Build ordered slides aligned to filters order
+  const orderedSlides = useMemo(() => {
+    if (!slideKeys.length) return [] as string[];
 
-  const stopTimer = useCallback(() => {
-    if (timer.current) {
-      window.clearInterval(timer.current);
-      timer.current = null;
-    }
-  }, []);
+    return filters.map((f) => {
+      const slugKey = normalize(f.slug); // "artist-news"
+      const nameKey = normalize(f.name); // "artist-news"
+      let idx = slideKeys.findIndex((s) => s.key.includes(slugKey));
+      if (idx === -1) idx = slideKeys.findIndex((s) => s.key.includes(nameKey));
+      if (idx === -1) idx = 0; // fallback
+      return slideKeys[idx].src;
+    });
+  }, [filters, slideKeys]);
 
-  // Start carousel timer on mount
+  // 3) Map slug -> index for instant jumps
+  const indexBySlug = useMemo(() => {
+    const map: Record<string, number> = {};
+    filters.forEach((f, i) => {
+      map[(f.slug || "").toLowerCase()] = i;
+    });
+    return map;
+  }, [filters]);
+
+  // 4) Keep slide in range if filters change
   useEffect(() => {
-    startTimer();
-    return () => stopTimer();
-  }, [startTimer, stopTimer]);
-  
-  const goToSlide = (index: number) => {
-    setSlide(index);
-    stopTimer();
-    setTimeout(startTimer, 1000); // Restart timer after manual navigation
+    if (slide >= orderedSlides.length) setSlide(0);
+  }, [orderedSlides, slide]);
+
+  const onSelectFilter = (slug: string) => {
+    setActive(slug);
+    const idx = indexBySlug[slug.toLowerCase()];
+    setSlide(Number.isInteger(idx) ? idx : 0);
   };
 
   return (
@@ -70,19 +94,13 @@ export default function NewsClient({ items, filters, slides }: Props) {
       {/* FILTERS */}
       <section className={styles.newsFilter} data-resource="news-filters">
         <ul className={styles.newsFilterList}>
-          {filters.map((f) => (
+          {filters.map((f, i) => (
             <li key={f.slug}>
               <Link
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  setActive(f.slug);
-                  // Advance the carousel by 1 slide (wrap around) on every filter click
-                  if (validSlides.length) {
-                    setSlide((s) => (s + 1) % validSlides.length);
-                    stopTimer();
-                    setTimeout(startTimer, 1000);
-                  }
+                  onSelectFilter(f.slug);
                 }}
                 className={active === f.slug ? styles.active : ""}
                 aria-current={active === f.slug ? "true" : undefined}
@@ -102,13 +120,13 @@ export default function NewsClient({ items, filters, slides }: Props) {
           <div
             className={styles.carouselContainer}
             style={{
-              width: `${validSlides.length * 100}%`,
+              width: `${Math.max(orderedSlides.length, 1) * 100}%`,
               transform: `translateX(-${100 * slide}%)`,
             }}
           >
-            {validSlides.map((src, i) => (
-              <div 
-                key={i} 
+            {orderedSlides.map((src, i) => (
+              <div
+                key={i}
                 className={styles.carouselSlide}
                 style={{ width: "100%" }}
               >
@@ -124,12 +142,12 @@ export default function NewsClient({ items, filters, slides }: Props) {
           </div>
 
           <div className={styles.carouselDots}>
-            {validSlides.map((_, i) => (
+            {orderedSlides.map((_, i) => (
               <button
                 key={i}
                 className={`${styles.dot} ${i === slide ? styles.active : ""}`}
                 aria-label={`Go to slide ${i + 1}`}
-                onClick={() => goToSlide(i)}
+                onClick={() => setSlide(i)}
               />
             ))}
           </div>
@@ -137,30 +155,28 @@ export default function NewsClient({ items, filters, slides }: Props) {
 
         {/* LIST */}
         <div className={styles.newsItemsContainer}>
-          {filtered.slice(0, visible).map((n) => {
-            return (
-              <a
-                key={n.id}
-                className={styles.newsItem}
-                href={n.website_link || "#"}
-                target={n.website_link ? "_blank" : undefined}
-                rel={n.website_link ? "noopener noreferrer" : undefined}
-              >
-                <div className={styles.newsContentWrapper}>
-                  <div className={styles.newsText}>
-                    <h1>{n.media_name}</h1>
-                  </div>
-                  <div className={styles.newsText}>
-                    <h1>{n.artist}</h1>
-                  </div>
+          {filtered.slice(0, visible).map((n) => (
+            <a
+              key={n.id}
+              className={styles.newsItem}
+              href={n.website_link || "#"}
+              target={n.website_link ? "_blank" : undefined}
+              rel={n.website_link ? "noopener noreferrer" : undefined}
+            >
+              <div className={styles.newsContentWrapper}>
+                <div className={styles.newsText}>
+                  <h1>{n.media_name}</h1>
                 </div>
-                <div className={styles.newsTitle}>
-                  <h1>{n.title}</h1>
+                <div className={styles.newsText}>
+                  <h1>{n.artist}</h1>
                 </div>
-                <div className={styles.newsArrow} aria-hidden="true" />
-              </a>
-            );
-          })}
+              </div>
+              <div className={styles.newsTitle}>
+                <h1>{n.title}</h1>
+              </div>
+              <div className={styles.newsArrow} aria-hidden="true" />
+            </a>
+          ))}
         </div>
 
         {/* LOAD MORE */}
