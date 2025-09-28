@@ -349,6 +349,10 @@
     background-image: url("/images/sports/hero-mobile.png");
   }
 
+  .hero-artist {
+    background-image: url("/images/artist/hero-mobile.png");
+  }
+
   .heroTitle {
     padding: 1rem 4rem 2rem 2rem;
 
@@ -365,7 +369,7 @@
     padding: $page-mobile-normal;
     flex-direction: column;
     gap: $section-large;
-
+    
     p {
       width: 90%;
       font: $font-mobile-dm-400-20;

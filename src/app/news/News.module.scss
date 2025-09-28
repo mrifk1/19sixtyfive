@@ -203,9 +203,9 @@
   color: v.$color-secondary;
   font: v.$font-desktop-dm-500-21;
   cursor: pointer;
-  @include m.hover-underline;
+  @include m.hover-underline();
   &::after {
-    background: v.$color-primary;
+    background: v.$color-secondary;
   }
 }
 
@@ -254,10 +254,6 @@
     height: 300px;
     border-top: 0.1rem solid v.$color-secondary;
     padding-bottom: 2rem;
-
-    .carouselSlide {
-      clip-path: polygon(0 0, 100% 0, 100% 82%, 88% 100%, 0 100%);
-    }
   }
 
   .newsItem {
@@ -292,6 +288,14 @@
       background-image: url("/images/icon/arrow-black.svg");
       background-size: contain;
     }
+
+    &:hover::after {
+      content: "";
+      width: 1rem;
+      height: 0.9rem;
+      background-image: url("/images/icon/arrow-black-hover.svg");
+      background-size: contain;
+    }
   }
 
   .newsText {
@@ -313,5 +317,9 @@
 
   .loadMore {
     font: v.$font-mobile-dm-400-14;
+    text-decoration: underline;
+    &::after {
+      display: none;
+    }
   }
 }

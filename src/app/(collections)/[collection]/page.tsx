@@ -102,9 +102,9 @@ export default async function ListPage({
         {ui.icon ? (
           <Image src={ui.icon} alt={`${kind} icon`} width={90} height={90} />
         ) : (
-          <span className={styles.iconText} aria-label={`${kind} icon`}>
+          <h1 className={styles.iconText} aria-label={`${kind} icon`}>
             {ui.iconLabel ?? kind}
-          </span>
+          </h1>
         )}
         <p>{ui.subtitle}</p>
       </section>

@@ -368,11 +368,8 @@
     padding: $page-mobile-normal;
     flex-direction: column;
     gap: $section-large;
-    h1 {
-      font: $font-mobile-dm-500-14;
-    }
     p {
-      width: 90%;
+      width: 90%; 
       font: $font-mobile-dm-400-20;
     }
   }
