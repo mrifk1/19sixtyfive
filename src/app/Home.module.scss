@@ -11,7 +11,7 @@
   text-align: center;
   gap: $section-medium;
   padding: 0;
-  min-height: calc(100vh - 96px);
+  min-height: calc(100vh - 6rem);
   background-color: $color-primary;
 
   img {
@@ -262,8 +262,7 @@
 
 @include respond("mobile") {
   .hero {
-    margin-top: -4rem;
-    min-height: calc(67vh - 96px);
+    min-height: calc(100vh - 4rem);
     img {
       width: 6rem;
     }
