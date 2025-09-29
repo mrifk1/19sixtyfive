@@ -82,7 +82,7 @@ export default function HomePage() {
               />
             </div>
             <figcaption>
-              <Link href="/artist-spotlight">
+              <Link href="/artist">
                 Artist spotlight:
                 <br />
                 for the love of live.
