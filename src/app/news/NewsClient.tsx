@@ -50,7 +50,7 @@ export default function NewsClient({ items, filters, slides }: Props) {
     () =>
       slides.filter(Boolean).map((src) => ({
         src,
-        key: normalize(basename(src)), 
+        key: normalize(basename(src)),
       })),
     [slides]
   );
@@ -138,17 +138,6 @@ export default function NewsClient({ items, filters, slides }: Props) {
                   priority={i === 0}
                 />
               </div>
-            ))}
-          </div>
-
-          <div className={styles.carouselDots}>
-            {orderedSlides.map((_, i) => (
-              <button
-                key={i}
-                className={`${styles.dot} ${i === slide ? styles.active : ""}`}
-                aria-label={`Go to slide ${i + 1}`}
-                onClick={() => setSlide(i)}
-              />
             ))}
           </div>
         </div>
