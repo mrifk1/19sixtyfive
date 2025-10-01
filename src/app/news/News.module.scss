@@ -18,7 +18,6 @@
   position: relative;
   background-size: cover;
   background-position: center;
-  clip-path: polygon(0 0, 100% 0, 100% 87%, 94% 100%, 0 100%);
 }
 .heroNews {
   background-image: url("/images/news/hero.png");
@@ -217,7 +216,9 @@
   .heroTitle h1 {
     font: v.$font-mobile-dm-400-32;
   }
-
+  .heroNews {
+    background-image: url("/images/news/hero-mobile.png");
+  }
   .heroImg {
     height: 40rem;
   }

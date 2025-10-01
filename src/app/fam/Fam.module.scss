@@ -279,6 +279,9 @@
       pointer-events: auto;
       color: $color-primary;
       text-decoration: underline;
+      &::after {
+        display: none;
+      }
     }
   }
 

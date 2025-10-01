@@ -80,9 +80,9 @@ export default function Footer() {
           </a>
         </li>
         <li>
-          <a href="https://tangentmoves.sg/" target="_blank" rel="noopener noreferrer">
+          {/* <a href="https://tangentmoves.sg/" target="_blank" rel="noopener noreferrer">
             tangentmoves.sg
-          </a>
+          </a> */}
         </li>
       </ul>
     </footer>

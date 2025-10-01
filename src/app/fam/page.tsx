@@ -147,12 +147,12 @@ export default function FamPage() {
         className={`${styles.banner} ${styles.bannerThird}`}
         id="tangent-moves"
       >
-        <Link
+        {/* <Link
           href="https://tangentmoves.sg/"
           className={styles.bannerLink}
           target="_blank"
           aria-label="Visit Tangent Moves"
-        />
+        /> */}
         <div className={styles.bannerOverlay} />
         <div className={styles.bannerContent}>
           <div className={styles.bannerInfo}>
@@ -166,13 +166,13 @@ export default function FamPage() {
               Pushing art forward, sideways, and sometimes, upside down.
             </h3>
           </div>
-          <Link
+          {/* <Link
             href="https://tangentmoves.sg/"
             className={styles.bannerCta}
             target="_blank"
           >
             Visit website
-          </Link>
+          </Link> */}
         </div>
       </section>
 

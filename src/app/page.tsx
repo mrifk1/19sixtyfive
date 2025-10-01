@@ -95,7 +95,7 @@ export default function HomePage() {
       {/* BANNER — BRANDS */}
       <section className={`${styles.banner} ${styles.second}`}>
         <Link
-          href="/brands-collab"
+          href="/brands"
           className={styles.bannerLink}
           aria-label="Go to Brands Collab"
         />
@@ -106,7 +106,7 @@ export default function HomePage() {
             <br />
             because we get it
           </h2>
-          <Link href="/brands-collab" className={styles.bannerCta}>
+          <Link href="/brands" className={styles.bannerCta}>
             View more
           </Link>
         </div>
@@ -156,7 +156,7 @@ export default function HomePage() {
       {/* BRANDS (icon swap) */}
       <section className={styles.brands}>
         <figure className={styles.brandItem}>
-          <Link href="/our-fam#24owls" className={styles.brandLink}>
+          <Link href="/fam#24owls" className={styles.brandLink}>
             <Image
               className={styles.base}
               src="/images/home/brands-first.png"
@@ -176,7 +176,7 @@ export default function HomePage() {
         </figure>
 
         <figure className={styles.brandItem}>
-          <Link href="/our-fam#sixtyfive" className={styles.brandLink}>
+          <Link href="/fam#sixtyfive" className={styles.brandLink}>
             <Image
               className={styles.base}
               src="/images/home/brands-second.png"
@@ -196,7 +196,7 @@ export default function HomePage() {
         </figure>
 
         <figure className={styles.brandItem}>
-          <Link href="/our-fam#tangent-moves" className={styles.brandLink}>
+          <Link href="/fam#tangent-moves" className={styles.brandLink}>
             <Image
               className={styles.base}
               src="/images/home/brands-third.png"

@@ -3,7 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./Collections.module.scss";
 
-import { asKind, getCollection, hrefOf, pickHover, isMobileFromHeaders } from "@/lib/api";
+import {
+  asKind,
+  getCollection,
+  hrefOf,
+  pickHover,
+  isMobileFromHeaders,
+} from "@/lib/api";
 import type { CollectionItem, CollectionKind } from "@/types";
 import { notFound } from "next/navigation";
 
@@ -26,7 +32,7 @@ const UI: Record<
 > = {
   festival: {
     titleLines: ["Common ground:", "Festivals, flipped our way."],
-    icon: "/images/festivals/icon.svg",
+    iconLabel: "Festivals",
     subtitle:
       "We don’t just build festivals — we build movements, moments and the kind of subculture people want to belong to.",
     frameClass: "frameFestival",
@@ -34,7 +40,7 @@ const UI: Record<
   },
   community: {
     titleLines: ["The community:", "Same series, fresh takes."],
-    icon: "/images/community/icon.svg",
+    iconLabel: "Community",
     subtitle:
       "Intimate but unexpected, our sessions bring artists, collaborators and creatives together for shared sparks and surprise moments.",
     frameClass: "frameCommunity",
@@ -43,14 +49,16 @@ const UI: Record<
   artist: {
     titleLines: ["Artist spotlight:", "Where craft meets crowd."],
     iconLabel: "Artist Spotlight",
-    subtitle: "From indie pop to rock, classical and everything in between — we curate concerts that don’t just fill a room, they fill a feeling.",
+    subtitle:
+      "From indie pop to rock, classical and everything in between — we curate concerts that don’t just fill a room, they fill a feeling.",
     frameClass: "frameArtist",
     variant: "frameWhite",
   },
   sport: {
     titleLines: ["Sports:", "Energy in motion."],
     iconLabel: "Sports",
-    subtitle: "We turn spaces into charged fan zones, where courts become culture and athletes feel close enough to touch.",
+    subtitle:
+      "We turn spaces into charged fan zones, where courts become culture and athletes feel close enough to touch.",
     frameClass: "frameSports",
     variant: "frameWhite",
   },
@@ -102,11 +110,13 @@ export default async function ListPage({
         {ui.icon ? (
           <Image src={ui.icon} alt={`${kind} icon`} width={90} height={90} />
         ) : (
-          <h1 className={styles.iconText} aria-label={`${kind} icon`}>
-            {ui.iconLabel ?? kind}
-          </h1>
+          <>
+            <h1 className={styles.iconText} aria-label={`${kind} icon`}>
+              {ui.iconLabel ?? kind}
+            </h1>
+            <p>{ui.subtitle}</p>
+          </>
         )}
-        <p>{ui.subtitle}</p>
       </section>
 
       <section

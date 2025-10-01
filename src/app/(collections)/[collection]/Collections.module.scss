@@ -369,7 +369,7 @@
     padding: $page-mobile-normal;
     flex-direction: column;
     gap: $section-large;
-    
+
     p {
       width: 90%;
       font: $font-mobile-dm-400-20;
@@ -455,6 +455,9 @@
       color: $color-primary;
       font: $font-desktop-dm-400-18;
       text-decoration: underline;
+      &::after {
+        display: none;
+      }
     }
   }
 
