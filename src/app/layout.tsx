@@ -21,10 +21,13 @@ export const viewport: Viewport = {
 export const metadata: Metadata = defaultMetadata({
   authors: [{ name: siteConfig.name, url: siteConfig.url }],
   keywords: [
-    "Singapore experiential agency",
-    "brand activations",
-    "music festivals Singapore",
-    "creative agency Singapore",
+    "19sixtyfive",
+    "creative agency",
+    "arts experiences",
+    "music events",
+    "entertainment",
+    "live events",
+    "festival production",
   ],
   icons: {
     icon: "/images/logo/logo-white.svg",

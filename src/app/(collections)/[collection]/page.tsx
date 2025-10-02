@@ -80,13 +80,28 @@ export async function generateMetadata({
   const kind = asKind(collection);
   if (!kind) return { title: "Not Found" };
   const ui = UI[kind];
-  const title = `${ui.iconLabel ?? kind[0].toUpperCase() + kind.slice(1)} Collection | ${siteConfig.name}`;
-  return collectionPageMetadata({
-    title,
+  const displayName = ui.iconLabel ?? kind[0].toUpperCase() + kind.slice(1);
+  const base = collectionPageMetadata({
+    title: displayName,
     description: ui.subtitle,
     path: `/${collection}`,
-    image: `/og?title=${encodeURIComponent(ui.iconLabel ?? kind)}`,
+    image: `/og?title=${encodeURIComponent(displayName)}`,
   });
+
+  const absoluteTitle = `${displayName} | ${siteConfig.name}`;
+
+  return {
+    ...base,
+    title: { absolute: absoluteTitle },
+    openGraph: {
+      ...base.openGraph,
+      title: absoluteTitle,
+    },
+    twitter: {
+      ...base.twitter,
+      title: absoluteTitle,
+    },
+  };
 }
 
 export default async function ListPage({
@@ -100,19 +115,20 @@ export default async function ListPage({
   if (!kind) return notFound();
 
   const ui = UI[kind];
+  const displayName = ui.iconLabel ?? kind[0].toUpperCase() + kind.slice(1);
   // Detect mobile from request headers
   const isMobile = await isMobileFromHeaders();
   const items = await getCollection(kind, isMobile);
 
   const structuredData = [
     webPageJsonLd({
-      name: `${ui.iconLabel ?? kind} Collection`,
+      name: displayName,
       path: `/${raw}`,
       description: ui.subtitle,
     }),
     breadcrumbJsonLd([
       { name: "Home", url: "/" },
-      { name: ui.iconLabel ?? kind, url: `/${raw}` },
+      { name: displayName, url: `/${raw}` },
     ]),
   ];
 
