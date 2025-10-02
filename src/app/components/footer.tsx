@@ -43,7 +43,7 @@ export default function Footer() {
             <Link href="/fam">Fam</Link>
           </li>
           <li>
-            <Link href="#">Youtube</Link>
+            <Link href="http://www.youtube.com/@19sixtyfivePteLtd" target="_blank" rel="noopener noreferrer">Youtube</Link>
           </li>
         </ul>
       </div>
