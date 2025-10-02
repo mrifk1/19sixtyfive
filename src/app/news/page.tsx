@@ -46,10 +46,10 @@ export default async function NewsPage() {
       </section>
 
       {/* Angled hero image */}
-      <section className={`${styles.heroImg} ${styles.heroNews}`} />
+      <section className={`${styles.heroImg}`} />
 
       {/* SUBTITLE */}
-      <section className={`${styles.heroSubtitle} ${styles.newsSubtitle}`}>
+      <section className={`${styles.heroSubtitle}`}>
         <h1>News Front</h1>
         <p>
           From low-key buzz to headline heat, we know how to get the right
@@ -58,7 +58,7 @@ export default async function NewsPage() {
       </section>
 
       {/* FRAME + CONTENT */}
-      <main className={`${styles.frame} ${styles.frameNews} ${styles.frameBlack}`}>
+      <main className={`${styles.frame} ${styles.frameBlack}`}>
         <NewsClient items={items} filters={filters} slides={slides} />
       </main>
     </>

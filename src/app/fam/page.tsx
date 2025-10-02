@@ -18,7 +18,7 @@ export default function FamPage() {
 
       {/* ABOUT (matches .hero__subtitle) */}
       <section className={styles.aboutSection}>
-        <h2 className={styles.aboutTitle}>About Us</h2>
+        <h1 className={styles.aboutTitle}>About Us</h1>
         <p className={styles.aboutText}>
           Behind the curtain is a tight crew — building spaces, backing bold
           ideas, and keeping the energy sharp. These are our kind of people:
