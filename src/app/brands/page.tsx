@@ -15,7 +15,7 @@ import {
 export const revalidate = 3600;
 
 export const metadata: Metadata = collectionPageMetadata({
-  title: "Brand Collaborations | 19sixtyfive",
+  title: "Brand Collaborations",
   description:
     "Collaborations with Singapore brands and partners shaping bold experiential campaigns across the region.",
   path: "/brands",

@@ -13,7 +13,7 @@ import {
 export const dynamic = "force-dynamic";  
 
 export const metadata: Metadata = collectionPageMetadata({
-  title: "News | 19sixtyfive",
+  title: "News",
   description:
     "Latest coverage and press about 19sixtyfive’s artists, festivals, and cultural collaborations in Singapore.",
   path: "/news",

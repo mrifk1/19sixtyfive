@@ -46,7 +46,7 @@ export async function generateMetadata({
   const canonical = absoluteUrl(`/${collection}/${slug}`);
   const hero = pickHero(item?.image_hero ?? null, isMobile);
   return {
-    title: `${title} | ${siteConfig.name}`,
+    title,
     description,
     alternates: {
       canonical,
@@ -55,18 +55,13 @@ export async function generateMetadata({
         "x-default": canonical,
       },
     },
+    /* Open Graph preview keeps shared links consistent (e.g. YouTube descriptions). */
     openGraph: {
       type: "article",
       url: canonical,
       title,
       description,
       images: hero ? [{ url: hero, width: 1200, height: 630, alt: title }] : undefined,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: hero ? [hero] : undefined,
     },
   } satisfies Metadata;
 }

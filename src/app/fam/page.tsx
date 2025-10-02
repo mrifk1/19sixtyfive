@@ -10,7 +10,7 @@ import {
 } from "@/lib/seo";
 
 export const metadata: Metadata = collectionPageMetadata({
-  title: "Our Fam | 19sixtyfive",
+  title: "Our Fam",
   description:
     "Meet the 19sixtyfive family — collaborators, venues, and artists shaping Singapore’s cultural experiences.",
   path: "/fam",

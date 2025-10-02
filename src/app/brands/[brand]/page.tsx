@@ -37,7 +37,7 @@ export async function generateMetadata({
   const canonical = absoluteUrl(`/brands/${brandParam}`);
   const hero = pickBanner(brand.image_banner, false);
   return {
-    title: `${title} | ${siteConfig.name}`,
+    title,
     description,
     alternates: {
       canonical,
@@ -46,6 +46,7 @@ export async function generateMetadata({
         "x-default": canonical,
       },
     },
+    /* Open Graph metadata keeps shared links consistent (e.g. YouTube descriptions). */
     openGraph: {
       type: "website",
       title,
@@ -61,12 +62,6 @@ export async function generateMetadata({
             },
           ]
         : undefined,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: hero ? [hero] : undefined,
     },
   } satisfies Metadata;
 }

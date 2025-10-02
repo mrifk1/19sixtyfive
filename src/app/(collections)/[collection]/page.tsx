@@ -16,7 +16,6 @@ import StructuredData from "@/app/components/StructuredData";
 import {
   breadcrumbJsonLd,
   collectionPageMetadata,
-  siteConfig,
   webPageJsonLd,
 } from "@/lib/seo";
 
@@ -87,21 +86,7 @@ export async function generateMetadata({
     path: `/${collection}`,
     image: `/og?title=${encodeURIComponent(displayName)}`,
   });
-
-  const absoluteTitle = `${displayName} | ${siteConfig.name}`;
-
-  return {
-    ...base,
-    title: { absolute: absoluteTitle },
-    openGraph: {
-      ...base.openGraph,
-      title: absoluteTitle,
-    },
-    twitter: {
-      ...base.twitter,
-      title: absoluteTitle,
-    },
-  };
+  return base;
 }
 
 export default async function ListPage({

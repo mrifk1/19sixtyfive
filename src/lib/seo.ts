@@ -62,12 +62,6 @@ export const defaultMetadata = (overrides: Metadata = {}): Metadata => ({
       },
     ],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.name,
-    description: siteConfig.tagline,
-    site: "@19sixtyfive",
-  },
   robots: {
     index: true,
     follow: true,
@@ -188,6 +182,7 @@ export const collectionPageMetadata = (
         "x-default": canonical,
       },
     },
+    /* Open Graph metadata for rich link previews (e.g. YouTube descriptions). */
     openGraph: {
       type: "website",
       locale: siteConfig.localeOg,
@@ -205,11 +200,6 @@ export const collectionPageMetadata = (
             },
           ]
         : undefined,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: params.title,
-      description: params.description ?? siteConfig.tagline,
     },
     ...overrides,
   } satisfies Metadata;
