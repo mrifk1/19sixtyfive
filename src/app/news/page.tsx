@@ -2,13 +2,23 @@ import type { Metadata } from "next";
 import styles from "./News.module.scss";
 import { getNews, buildNewsFilters } from "@/lib/api";
 import NewsClient from "./NewsClient";
+import StructuredData from "@/app/components/StructuredData";
+import {
+  breadcrumbJsonLd,
+  collectionPageMetadata,
+  itemListJsonLd,
+  webPageJsonLd,
+} from "@/lib/seo";
 
 export const dynamic = "force-dynamic";  
 
-export const metadata: Metadata = {
+export const metadata: Metadata = collectionPageMetadata({
   title: "News | 19sixtyfive",
-  alternates: { canonical: "/news" },
-};
+  description:
+    "Latest coverage and press about 19sixtyfive’s artists, festivals, and cultural collaborations in Singapore.",
+  path: "/news",
+  image: "/og?title=News",
+});
 
 async function getNewsSafe(timeoutMs = 8000) {
   try {
@@ -35,8 +45,29 @@ export default async function NewsPage() {
     "/images/news/04-Festivals.png",
   ];
 
+  const structuredData = [
+    webPageJsonLd({
+      name: "News",
+      path: "/news",
+      description:
+        "Latest coverage and press about 19sixtyfive’s artists, festivals, and cultural collaborations in Singapore.",
+    }),
+    breadcrumbJsonLd([
+      { name: "Home", url: "/" },
+      { name: "News", url: "/news" },
+    ]),
+    itemListJsonLd(
+      "Latest News",
+      items.slice(0, 10).map((item) => ({
+        name: item.title,
+        url: item.website_link || `/news#${item.slug ?? item.id}`,
+      }))
+    ),
+  ];
+
   return (
     <>
+      <StructuredData data={structuredData} />
       {/* HERO */}
       <section className={styles.heroTitle}>
         <h1>

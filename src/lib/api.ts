@@ -8,14 +8,26 @@ import type {
   BrandProject,
   NewsItem,
 } from "@/types";
+import {
+  getRequiredServerEnvVar,
+  isProduction,
+  sanitizePathInput,
+  sanitizeUrl,
+} from "@/lib/env";
+
+if (typeof window !== "undefined") {
+  throw new Error("api utilities can only be used on the server");
+}
 
 /**
  * Env
  * - API_BASE_URL=https://wp.19sixtyfive.com.sg/wp-json/custom/v1
  * - API_KEY=xxxxx
  */
-const BASE_URL = process.env.API_BASE_URL!;
-const API_KEY = process.env.API_KEY!;
+const RAW_BASE_URL = getRequiredServerEnvVar("API_BASE_URL");
+const BASE_URL = sanitizeUrl(RAW_BASE_URL, "API_BASE_URL");
+const API_KEY = getRequiredServerEnvVar("API_KEY");
+const isProd = isProduction();
 
 /* ==============================
  * Utils
@@ -52,26 +64,32 @@ export async function isMobileFromHeaders(): Promise<boolean> {
  * ============================== */
 type GetOpts = { revalidate?: number; tags?: string[]; isMobile?: boolean };
 
+function buildUrl(path: string, isMobile: boolean): string {
+  if (path.startsWith("http")) {
+    const url = new URL(path);
+    url.searchParams.set("device", isMobile ? "mobile" : "desktop");
+    return url.toString();
+  }
+  const normalized = sanitizePathInput(path);
+  const url = new URL(`${BASE_URL}${normalized}`);
+  url.searchParams.set("device", isMobile ? "mobile" : "desktop");
+  return url.toString();
+}
+
 export async function apiGet<T>(path: string, opts: GetOpts = {}): Promise<T> {
   const { revalidate = 3600, tags = [], isMobile = false } = opts; // default 1h
-  const isDev = process.env.NODE_ENV !== "production";
-  const url = path.startsWith("http") ? path : `${BASE_URL}${path}`;
-  
-  // Add device parameter to query string
-  const separator = url.includes('?') ? '&' : '?';
-  const deviceParam = isMobile ? `${separator}device=mobile` : `${separator}device=desktop`;
-  const finalUrl = `${url}${deviceParam}`;
+  const finalUrl = buildUrl(path, isMobile);
 
   const res = await fetch(finalUrl, {
     method: "GET",
     headers: { Accept: "application/json", "X-API-Key": API_KEY },
     // Dev: always fresh; Prod: ISR + Tags
-    next: isDev ? { revalidate: 0 } : { revalidate, tags },
-    cache: isDev ? "no-store" : "force-cache",
+    next: isProd ? { revalidate, tags } : { revalidate: 0 },
+    cache: isProd ? "force-cache" : "no-store",
   });
 
   if (!res.ok) {
-    throw new Error(`GET ${url} failed: ${res.status} ${res.statusText}`);
+    throw new Error(`GET ${finalUrl} failed: ${res.status} ${res.statusText}`);
   }
   return res.json() as Promise<T>;
 }

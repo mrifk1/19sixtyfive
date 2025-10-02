@@ -17,6 +17,13 @@ import {
   isMobileFromHeaders,
 } from "@/lib/api";
 import { notFound } from "next/navigation";
+import StructuredData from "@/app/components/StructuredData";
+import {
+  absoluteUrl,
+  articleJsonLd,
+  breadcrumbJsonLd,
+  siteConfig,
+} from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -33,14 +40,45 @@ export async function generateMetadata({
   const isMobile = await isMobileFromHeaders();
   const proj = await getProjectBySlug(brand.id, projectParam, isMobile);
   const title = proj?.title ?? "Untitled";
+  const descriptionHtml = proj?.description ?? null;
+  const description = descriptionHtml
+    ? descriptionHtml.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
+    : `${title} — a ${siteConfig.name} collaboration`;
+  const canonical = absoluteUrl(`/brands/${brandParam}/${projectParam}`);
+  const hero = pickProjectHero(proj?.image_hero ?? null, isMobile);
   return {
-    title: `${title} | 19sixtyfive`,
-    alternates: { canonical: `/brands/${brandParam}/${projectParam}` },
-    openGraph: {
-      title,
-      images: [{ url: pickProjectHero(proj?.image_hero ?? null, isMobile) }],
+    title: `${title} | ${siteConfig.name}`,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        "en-SG": canonical,
+        "x-default": canonical,
+      },
     },
-  };
+    openGraph: {
+      type: "article",
+      url: canonical,
+      title,
+      description,
+      images: hero
+        ? [
+            {
+              url: hero,
+              width: 1200,
+              height: 630,
+              alt: title,
+            },
+          ]
+        : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: hero ? [hero] : undefined,
+    },
+  } satisfies Metadata;
 }
 
 type GalleryItem = { key: number; src: string };
@@ -112,8 +150,28 @@ export default async function ProjectDetailPage({
 
   const rows = chunk(gallery, 4);
 
+  const descriptionText = detailProj.description
+    ? detailProj.description.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
+    : siteConfig.tagline;
+
+  const structuredData = [
+    breadcrumbJsonLd([
+      { name: "Home", url: "/" },
+      { name: "Brands", url: "/brands" },
+      { name: brand.title ?? "Brand", url: `/brands/${brandParam}` },
+      { name: detailProj.title ?? "Project", url: `/brands/${brandParam}/${projectParam}` },
+    ]),
+    articleJsonLd({
+      title: detailProj.title ?? "Untitled",
+      description: descriptionText,
+      url: `/brands/${brandParam}/${projectParam}`,
+      image: hero,
+    }),
+  ];
+
   return (
     <>
+      <StructuredData data={structuredData} />
       {/* ===== Hero (match file kedua) ===== */}
       <section
         className={styles.heroSection}
@@ -157,6 +215,7 @@ export default async function ProjectDetailPage({
             alt="Logo"
             width={180}
             height={90}
+            sizes="180px"
           />
           {detailProj.website_link && (
             <a
@@ -177,8 +236,20 @@ export default async function ProjectDetailPage({
           <p dangerouslySetInnerHTML={{ __html: detailProj.description }} />
         ) : null}
         <div className={styles.images}>
-          <Image src={img1} alt="Secondary 1" width={400} height={400} />
-          <Image src={img2} alt="Secondary 2" width={400} height={400} />
+          <Image
+            src={img1}
+            alt="Secondary 1"
+            width={400}
+            height={400}
+            sizes="(max-width: 768px) 80vw, 400px"
+          />
+          <Image
+            src={img2}
+            alt="Secondary 2"
+            width={400}
+            height={400}
+            sizes="(max-width: 768px) 80vw, 400px"
+          />
         </div>
       </section>
 
@@ -200,7 +271,7 @@ export default async function ProjectDetailPage({
                     src={g.src}
                     alt={`Gallery ${g.key + 1}`}
                     fill
-                    sizes="(max-width: 768px) 150px, 300px"
+                    sizes="(max-width: 768px) 45vw, 300px"
                     priority={rIdx === 0 && g.key < 4}
                   />
                 </div>

@@ -94,7 +94,7 @@ export default function NewsClient({ items, filters, slides }: Props) {
       {/* FILTERS */}
       <section className={styles.newsFilter} data-resource="news-filters">
         <ul className={styles.newsFilterList}>
-          {filters.map((f, i) => (
+          {filters.map((f) => (
             <li key={f.slug}>
               <Link
                 href="#"

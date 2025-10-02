@@ -12,6 +12,13 @@ import {
 } from "@/lib/api";
 import type { CollectionItem, CollectionKind } from "@/types";
 import { notFound } from "next/navigation";
+import StructuredData from "@/app/components/StructuredData";
+import {
+  breadcrumbJsonLd,
+  collectionPageMetadata,
+  siteConfig,
+  webPageJsonLd,
+} from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -72,11 +79,14 @@ export async function generateMetadata({
   const { collection } = await params;
   const kind = asKind(collection);
   if (!kind) return { title: "Not Found" };
-  const ttl = kind[0].toUpperCase() + kind.slice(1);
-  return {
-    title: `${ttl} | 19sixtyfive`,
-    alternates: { canonical: `/${collection}` },
-  };
+  const ui = UI[kind];
+  const title = `${ui.iconLabel ?? kind[0].toUpperCase() + kind.slice(1)} Collection | ${siteConfig.name}`;
+  return collectionPageMetadata({
+    title,
+    description: ui.subtitle,
+    path: `/${collection}`,
+    image: `/og?title=${encodeURIComponent(ui.iconLabel ?? kind)}`,
+  });
 }
 
 export default async function ListPage({
@@ -94,8 +104,21 @@ export default async function ListPage({
   const isMobile = await isMobileFromHeaders();
   const items = await getCollection(kind, isMobile);
 
+  const structuredData = [
+    webPageJsonLd({
+      name: `${ui.iconLabel ?? kind} Collection`,
+      path: `/${raw}`,
+      description: ui.subtitle,
+    }),
+    breadcrumbJsonLd([
+      { name: "Home", url: "/" },
+      { name: ui.iconLabel ?? kind, url: `/${raw}` },
+    ]),
+  ];
+
   return (
     <>
+      <StructuredData data={structuredData} />
       <section className={styles.heroTitle}>
         <h1>
           {ui.titleLines[0]}

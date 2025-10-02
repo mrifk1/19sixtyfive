@@ -1,10 +1,39 @@
-import styles from "./Fam.module.scss";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import styles from "./Fam.module.scss";
+import StructuredData from "@/app/components/StructuredData";
+import {
+  breadcrumbJsonLd,
+  collectionPageMetadata,
+  webPageJsonLd,
+} from "@/lib/seo";
+
+export const metadata: Metadata = collectionPageMetadata({
+  title: "Our Fam | 19sixtyfive",
+  description:
+    "Meet the 19sixtyfive family — collaborators, venues, and artists shaping Singapore’s cultural experiences.",
+  path: "/fam",
+  image: "/og?title=Our%20Fam",
+});
 
 export default function FamPage() {
+  const structuredData = [
+    webPageJsonLd({
+      name: "Our Fam",
+      path: "/fam",
+      description:
+        "Meet the 19sixtyfive family — collaborators, venues, and artists shaping Singapore’s cultural experiences.",
+    }),
+    breadcrumbJsonLd([
+      { name: "Home", url: "/" },
+      { name: "Our Fam", url: "/fam" },
+    ]),
+  ];
+
   return (
     <>
+      <StructuredData data={structuredData} />
       {/* HERO TITLE (single h1 for semantics) */}
       <section className={styles.heroTitleSection}>
         <h1 className={styles.heroTitle}>

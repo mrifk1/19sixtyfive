@@ -18,6 +18,13 @@ import {
   pickBanner,
   pickImageSrc,
 } from "@/lib/api";
+import StructuredData from "@/app/components/StructuredData";
+import {
+  absoluteUrl,
+  articleJsonLd,
+  breadcrumbJsonLd,
+  siteConfig,
+} from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -32,11 +39,36 @@ export async function generateMetadata({
   const isMobile = await isMobileFromHeaders();
   const item = await getItemBySlug(kind, slug, isMobile);
   const title = item?.title ?? "Untitled";
+  const descriptionHtml = item?.description ?? item?.excerpt ?? null;
+  const description = descriptionHtml
+    ? descriptionHtml.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
+    : siteConfig.tagline;
+  const canonical = absoluteUrl(`/${collection}/${slug}`);
+  const hero = pickHero(item?.image_hero ?? null, isMobile);
   return {
-    title: `${title} | 19sixtyfive`,
-    alternates: { canonical: `/${collection}/${slug}` },
-    openGraph: { title, images: [{ url: pickHero(item?.image_hero ?? null, isMobile) }] },
-  };
+    title: `${title} | ${siteConfig.name}`,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        "en-SG": canonical,
+        "x-default": canonical,
+      },
+    },
+    openGraph: {
+      type: "article",
+      url: canonical,
+      title,
+      description,
+      images: hero ? [{ url: hero, width: 1200, height: 630, alt: title }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: hero ? [hero] : undefined,
+    },
+  } satisfies Metadata;
 }
 
 type GalleryItem = { key: number; src: string };
@@ -101,8 +133,29 @@ export default async function DetailPage({
 
   const rows = chunk(gallery, 4);
 
+  const descriptionText = detailItem.description
+    ? detailItem.description.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
+    : detailItem.excerpt ?? siteConfig.tagline;
+
+  const kindLabel = kind[0].toUpperCase() + kind.slice(1);
+
+  const structuredData = [
+    breadcrumbJsonLd([
+      { name: "Home", url: "/" },
+      { name: kindLabel, url: `/${collection}` },
+      { name: detailItem.title ?? "Untitled", url: `/${collection}/${slug}` },
+    ]),
+    articleJsonLd({
+      title: detailItem.title ?? "Untitled",
+      description: descriptionText,
+      url: `/${collection}/${slug}`,
+      image: hero,
+    }),
+  ];
+
   return (
     <>
+      <StructuredData data={structuredData} />
       <section
         className={styles.heroSection}
         style={{ backgroundImage: `url(${hero})` }}
@@ -145,6 +198,7 @@ export default async function DetailPage({
             alt="Logo"
             width={180}
             height={90}
+            sizes="180px"
           />
           {detailItem.website_link && (
             <a
@@ -164,8 +218,20 @@ export default async function DetailPage({
           <p dangerouslySetInnerHTML={{ __html: detailItem.description }} />
         ) : null}
         <div className={styles.images}>
-          <Image src={img1} alt="Secondary 1" width={400} height={400} />
-          <Image src={img2} alt="Secondary 2" width={400} height={400} />
+          <Image
+            src={img1}
+            alt="Secondary 1"
+            width={400}
+            height={400}
+            sizes="(max-width: 768px) 80vw, 400px"
+          />
+          <Image
+            src={img2}
+            alt="Secondary 2"
+            width={400}
+            height={400}
+            sizes="(max-width: 768px) 80vw, 400px"
+          />
         </div>
       </section>
 
@@ -185,7 +251,7 @@ export default async function DetailPage({
                     src={g.src}
                     alt={`Gallery ${g.key + 1}`}
                     fill
-                    sizes="(max-width: 768px) 150px, 300px"
+                    sizes="(max-width: 768px) 45vw, 300px"
                     priority={rIdx === 0 && g.key < 4}
                   />
                 </div>

@@ -1,2 +1,9 @@
+# *
 User-agent: *
 Allow: /
+
+# Host
+Host: https://19sixtyfive.com.sg
+
+# Sitemaps
+Sitemap: https://19sixtyfive.com.sg/sitemap.xml

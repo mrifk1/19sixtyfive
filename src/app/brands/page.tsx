@@ -5,19 +5,42 @@ import styles from "./Brands.module.scss";
 
 import { getBrands, hrefBrand, pickBrandThumb } from "@/lib/api";
 import type { BrandItem } from "@/types";
+import StructuredData from "@/app/components/StructuredData";
+import {
+  breadcrumbJsonLd,
+  collectionPageMetadata,
+  webPageJsonLd,
+} from "@/lib/seo";
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
-  title: "Brands | 19sixtyfive",
-  alternates: { canonical: "/brands" },
-};
+export const metadata: Metadata = collectionPageMetadata({
+  title: "Brand Collaborations | 19sixtyfive",
+  description:
+    "Collaborations with Singapore brands and partners shaping bold experiential campaigns across the region.",
+  path: "/brands",
+  image: "/og?title=Brands",
+});
 
 export default async function BrandsPage() {
   const items = await getBrands();
 
+  const structuredData = [
+    webPageJsonLd({
+      name: "Brand Collaborations",
+      path: "/brands",
+      description:
+        "Collaborations with Singapore brands and partners shaping bold experiential campaigns across the region.",
+    }),
+    breadcrumbJsonLd([
+      { name: "Home", url: "/" },
+      { name: "Brands", url: "/brands" },
+    ]),
+  ];
+
   return (
     <>
+      <StructuredData data={structuredData} />
       <section className={styles.heroTitle}>
         <h1>
           Wanting in:
@@ -48,6 +71,7 @@ export default async function BrandsPage() {
                   alt={b.title ?? "Brand"}
                   width={350}
                   height={350}
+                  sizes="(max-width: 768px) 80vw, 350px"
                 />
               </div>
               <figcaption>

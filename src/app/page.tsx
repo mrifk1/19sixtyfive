@@ -1,11 +1,45 @@
+import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import styles from "./Home.module.scss";
+import StructuredData from "./components/StructuredData";
 import VideoPlayer from "./components/VideoPlayer";
-import Image from "next/image";
+import {
+  breadcrumbJsonLd,
+  collectionPageMetadata,
+  siteConfig,
+  webPageJsonLd,
+} from "@/lib/seo";
+
+const PAGE_TITLE = "Singapore Experiential Agency | 19sixtyfive";
+const PAGE_DESCRIPTION =
+  "Immersive festivals, culture-first collaborations, and brand experiences crafted in Singapore for the region.";
+
+export const metadata: Metadata = collectionPageMetadata({
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  path: "/",
+  image: "/og?title=19sixtyfive",
+});
+
+export const revalidate = 1800;
 
 export default function HomePage() {
+  const structuredData = [
+    webPageJsonLd({
+      name: PAGE_TITLE,
+      path: "/",
+      description: PAGE_DESCRIPTION,
+    }),
+    breadcrumbJsonLd([
+      { name: "Home", url: "/" },
+      { name: siteConfig.name, url: "/" },
+    ]),
+  ];
+
   return (
     <>
+      <StructuredData data={structuredData} />
       {/* HERO */}
       <section className={styles.hero}>
         <Image
@@ -13,6 +47,8 @@ export default function HomePage() {
           alt="19sixtyfive"
           width={160}
           height={160}
+          priority
+          sizes="160px"
         />
         <h1 className={styles.heroTitle}>
           We&apos;re 19sixtyfive.
@@ -61,6 +97,7 @@ export default function HomePage() {
                 alt="Community"
                 width={448}
                 height={448}
+                sizes="(max-width: 768px) 80vw, 448px"
               />
             </div>
             <figcaption>
@@ -79,6 +116,7 @@ export default function HomePage() {
                 alt="Artist Spotlight"
                 width={320}
                 height={320}
+                sizes="(max-width: 768px) 60vw, 320px"
               />
             </div>
             <figcaption>
@@ -122,6 +160,7 @@ export default function HomePage() {
                 alt="Sports"
                 width={448}
                 height={448}
+                sizes="(max-width: 768px) 80vw, 448px"
               />
             </div>
             <figcaption>
@@ -140,6 +179,7 @@ export default function HomePage() {
                 alt="News"
                 width={320}
                 height={320}
+                sizes="(max-width: 768px) 60vw, 320px"
               />
             </div>
             <figcaption>
@@ -162,7 +202,8 @@ export default function HomePage() {
               src="/images/home/brands-first.png"
               alt="24OWLS logo"
               width={352}
-              height={352}
+                height={352}
+                sizes="(max-width: 768px) 70vw, 352px"
             />
             <Image
               className={styles.hover}
@@ -170,7 +211,8 @@ export default function HomePage() {
               alt=""
               aria-hidden="true"
               width={352}
-              height={352}
+                height={352}
+                sizes="(max-width: 768px) 70vw, 352px"
             />
           </Link>
         </figure>
@@ -182,7 +224,8 @@ export default function HomePage() {
               src="/images/home/brands-second.png"
               alt="65 logo"
               width={352}
-              height={352}
+                height={352}
+                sizes="(max-width: 768px) 70vw, 352px"
             />
             <Image
               className={styles.hover}
@@ -190,7 +233,8 @@ export default function HomePage() {
               alt=""
               aria-hidden="true"
               width={352}
-              height={352}
+                height={352}
+                sizes="(max-width: 768px) 70vw, 352px"
             />
           </Link>
         </figure>
@@ -202,7 +246,8 @@ export default function HomePage() {
               src="/images/home/brands-third.png"
               alt="Tangent Moves logo"
               width={352}
-              height={352}
+                height={352}
+                sizes="(max-width: 768px) 70vw, 352px"
             />
             <Image
               className={styles.hover}
@@ -210,7 +255,8 @@ export default function HomePage() {
               alt=""
               aria-hidden="true"
               width={352}
-              height={352}
+                height={352}
+                sizes="(max-width: 768px) 70vw, 352px"
             />
           </Link>
         </figure>
