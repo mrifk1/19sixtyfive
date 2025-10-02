@@ -8,21 +8,22 @@ export const siteConfig = {
   locale: "en-SG",
   localeOg: "en_SG",
   countryCode: "SG",
-  latitude: 1.3521,
-  longitude: 103.8198,
+  latitude: 1.2704823,
+  longitude: 103.798622,
   address: {
-    streetAddress: "",
+    streetAddress: "27 Pasir Panjang Rd",
     addressLocality: "Singapore",
-    postalCode: "",
+    postalCode: "117537",
     addressCountry: "SG",
   },
-  contactEmail: "hello@19sixtyfive.com.sg",
+
+  contactEmail: "contact@19sixtyfive.com.sg",
   socials: {
-    instagram: "https://www.instagram.com/19sixtyfive/",
-    facebook: "https://www.facebook.com/19sixtyfive/",
-    youtube: "https://www.youtube.com/@19sixtyfive",
+    // instagram: "https://www.instagram.com",
+    // facebook: "https://www.facebook.com",
+    youtube: "http://www.youtube.com/@19sixtyfivePteLtd",
   },
-  defaultOgImage: "/images/home/banner-first.png",
+  defaultOgImage: "/images/logo/logo-white.svg",
 };
 
 export const absoluteUrl = (path: string) => {

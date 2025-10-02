@@ -11,16 +11,23 @@ import {
   webPageJsonLd,
 } from "@/lib/seo";
 
-const PAGE_TITLE = "Singapore Experiential Agency | 19sixtyfive";
+const PAGE_TITLE =
+  "19sixtyfive | Creative Agency | Arts, Music, Entertainment, Event";
 const PAGE_DESCRIPTION =
   "Immersive festivals, culture-first collaborations, and brand experiences crafted in Singapore for the region.";
-
-export const metadata: Metadata = collectionPageMetadata({
+const baseMetadata = collectionPageMetadata({
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
   path: "/",
   image: "/og?title=19sixtyfive",
 });
+
+export const metadata: Metadata = {
+  ...baseMetadata,
+  title: {
+    absolute: PAGE_TITLE,
+  },
+};
 
 export const revalidate = 1800;
 
