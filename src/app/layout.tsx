@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
+import { DM_Sans, Montserrat } from "next/font/google";
 import "../styles/globals.scss"; // global scss
 import Footer from "./components/footer";
 import Header from "./components/header";
@@ -32,11 +34,28 @@ export const metadata: Metadata = defaultMetadata({
   category: "Creative Services",
 });
 
-export default function RootLayout({
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+  variable: "--font-dm-sans",
+});
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["500"],
+  display: "swap",
+  variable: "--font-montserrat",
+});
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const headerList = await headers();
+  const nonce = headerList.get("x-nonce") ?? undefined;
+
   return (
     <html lang={siteConfig.locale} data-region={siteConfig.countryCode}>
       <head>
@@ -47,11 +66,16 @@ export default function RootLayout({
         />
         <link rel="dns-prefetch" href="https://wp.19sixtyfive.com.sg" />
       </head>
-      <body>
+      <body
+        className={`${dmSans.className} ${dmSans.variable} ${montserrat.variable}`}
+      >
         <Header />
         <main>{children}</main>
         <Footer />
-        <StructuredData data={[organizationJsonLd(), websiteJsonLd()]} />
+        <StructuredData
+          nonce={nonce}
+          data={[organizationJsonLd(), websiteJsonLd()]}
+        />
       </body>
     </html>
   );
