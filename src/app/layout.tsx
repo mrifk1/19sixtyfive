@@ -5,6 +5,8 @@ import "../styles/globals.scss"; // global scss
 import Footer from "./components/footer";
 import Header from "./components/header";
 import StructuredData from "./components/StructuredData";
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import {
   defaultMetadata,
   organizationJsonLd,
@@ -61,6 +63,8 @@ export default async function RootLayout({
 
   return (
     <html lang={siteConfig.locale} data-region={siteConfig.countryCode}>
+      <Analytics/>
+      <SpeedInsights/>
       <head>
         <link
           rel="preconnect"

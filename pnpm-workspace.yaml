@@ -1,4 +1,5 @@
 ignoredBuiltDependencies:
   - '@parcel/watcher'
+  - '@vercel/speed-insights'
   - sharp
   - unrs-resolver
