@@ -369,7 +369,7 @@
     flex-direction: column;
     gap: $section-large;
     p {
-      width: 90%; 
+      width: 90%;
       font: $font-mobile-dm-400-20;
     }
   }
@@ -441,6 +441,8 @@
     .thumb {
       width: 300px;
       height: auto;
+      justify-content: center !important;
+
       :global(img) {
         width: auto;
         height: auto;
@@ -451,8 +453,11 @@
 
     .info {
       width: 300px;
+      display: flex;
+      flex-direction: column;
       justify-content: center;
-      align-content: center;
+      align-items: center;
+      text-align: center;
 
       h2 {
         font: $font-mobile-dm-400-20;
@@ -465,7 +470,8 @@
         height: 3rem;
         display: flex;
         align-items: center;
-        justify-content: center;
+        align-self: center;
+        justify-content: center !important;
         padding: 0;
       }
     }

@@ -71,6 +71,7 @@ export default function Header() {
             alt="1965 logo"
             width={60}
             height={60}
+            style={{ height: "auto" }}
           />
         </Link>
 
@@ -105,6 +106,7 @@ export default function Header() {
             alt="1965 logo white"
             width={90}
             height={90}
+            style={{ height: "auto" }}
           />
         </Link>
 
