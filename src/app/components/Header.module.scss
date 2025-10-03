@@ -88,12 +88,16 @@
   display: flex;
   flex-direction: column;
   padding: $section-medium;
+  opacity: 0;
+  visibility: hidden;
   transform: scale(0);
   transform-origin: top right;
-  transition: transform 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
   overflow-y: auto; /* scroll inside menu, not body */
 
   &.active {
+    opacity: 1;
+    visibility: visible;
     transform: scale(1);
   }
 
