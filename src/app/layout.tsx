@@ -5,8 +5,6 @@ import "../styles/globals.scss"; // global scss
 import Footer from "./components/footer";
 import Header from "./components/header";
 import StructuredData from "./components/StructuredData";
-import { Analytics } from "@vercel/analytics/next"
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import {
   defaultMetadata,
   organizationJsonLd,
@@ -42,15 +40,19 @@ export const metadata: Metadata = defaultMetadata({
 const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500"],
-  display: "swap",
+  display: "optional",
   variable: "--font-dm-sans",
+  preload: true,
+  fallback: ["system-ui", "arial"],
 });
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500"],
-  display: "swap",
+  display: "optional",
   variable: "--font-montserrat",
+  preload: true,
+  fallback: ["system-ui", "arial"],
 });
 
 export default async function RootLayout({
@@ -63,8 +65,6 @@ export default async function RootLayout({
 
   return (
     <html lang={siteConfig.locale} data-region={siteConfig.countryCode}>
-      <Analytics/>
-      <SpeedInsights/>
       <head>
         <link
           rel="preconnect"

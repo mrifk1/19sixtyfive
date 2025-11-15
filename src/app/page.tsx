@@ -77,7 +77,7 @@ export default function HomePage() {
       {/* BANNER — FESTIVALS */}
       <section className={`${styles.banner} ${styles.first}`}>
         <Link
-          href="/festival"
+          href="/festivals"
           className={styles.bannerLink}
           aria-label="Go to Festivals"
         />
@@ -88,7 +88,7 @@ export default function HomePage() {
             <br />
             festivals, flipped our way.
           </h2>
-          <Link href="/festival" className={styles.bannerCta}>
+          <Link href="/festivals" className={styles.bannerCta}>
             View more
           </Link>
         </div>

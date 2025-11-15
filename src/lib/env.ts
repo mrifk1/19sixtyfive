@@ -1,46 +1,9 @@
-type RequiredEnvKey = "API_BASE_URL" | "API_KEY" | "REVALIDATE_SECRET";
-
-type ExtendedGlobal = typeof globalThis & {
-  __envCache?: Map<string, string>;
-};
-
-const globalEnv = globalThis as ExtendedGlobal;
-
-if (!globalEnv.__envCache) {
-  globalEnv.__envCache = new Map();
-}
-
-const cache = globalEnv.__envCache;
-
-function readEnv(name: string): string | undefined {
-  if (cache.has(name)) return cache.get(name);
-  const value = process.env[name];
-  if (typeof value === "string") {
-    const trimmed = value.trim();
-    if (trimmed.length > 0) {
-      cache.set(name, trimmed);
-      return trimmed;
-    }
-  }
-  cache.set(name, "");
-  return undefined;
-}
-
-export function getRequiredServerEnvVar(name: RequiredEnvKey): string {
-  const value = readEnv(name);
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${name}`);
-  }
-  return value;
-}
-
 export function getOptionalServerEnvVar(
   name: string,
   fallback?: string
 ): string | undefined {
-  const value = readEnv(name);
-  if (!value) return fallback;
-  return value;
+  const value = process.env[name]?.trim();
+  return value || fallback;
 }
 
 export function isProduction(): boolean {

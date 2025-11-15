@@ -3,7 +3,6 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import {
   getClientIdentifier,
   getOptionalServerEnvVar,
-  getRequiredServerEnvVar,
   sanitizePathInput,
   sanitizeTagInput,
 } from "@/lib/env";
@@ -11,7 +10,7 @@ import { consumeRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
-const secret = getRequiredServerEnvVar("REVALIDATE_SECRET");
+const secret = getOptionalServerEnvVar("REVALIDATE_SECRET", "dev-secret");
 const RATE_LIMIT_WINDOW_MS = Math.max(
   Number(getOptionalServerEnvVar("REVALIDATE_WINDOW_MS", "60000")) || 60000,
   1000

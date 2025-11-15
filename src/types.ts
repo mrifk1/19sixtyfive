@@ -1,4 +1,4 @@
-export type CollectionKind = "festival" | "community" | "artist" | "sport";
+export type CollectionKind = "festivals" | "community" | "artist" | "sports";
 
 export type DeviceImage = {
   desktop?: string | null;
@@ -11,6 +11,7 @@ export interface CollectionItem {
   title: string | null;
   description: string | null;
   website_link?: string | null;
+  youtube_embed_url?: string | null;
   slug?: string | null;
   excerpt?: string | null;
   status?: string | null;
@@ -63,6 +64,7 @@ export interface BrandProject {
   slug?: string | null;
   description?: string | null;
   website_link?: string | null;
+  youtube_embed_url?: string | null;
 
   image_event?: DeviceImage | null;
   image_hero?: DeviceImage | null;

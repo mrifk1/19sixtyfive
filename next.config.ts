@@ -3,15 +3,26 @@ import type { NextConfig } from "next";
 const YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
 const MONTH_IN_SECONDS = 60 * 60 * 24 * 30;
 
+const allowedImageHosts = process.env.ALLOWED_IMAGE_HOSTS 
+  ? process.env.ALLOWED_IMAGE_HOSTS.split(",")
+  : ["localhost"];
+
 const nextConfig: NextConfig = {
   compress: true,
   reactStrictMode: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
   images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "wp.19sixtyfive.com.sg", pathname: "/**" },
-    ],
+    remotePatterns: allowedImageHosts.flatMap((hostname): Array<{ protocol: "http" | "https"; hostname: string }> => {
+      const trimmed = hostname.trim();
+      if (trimmed === "localhost") {
+        return [
+          { protocol: "http", hostname: "localhost" },
+          { protocol: "http", hostname: "127.0.0.1" },
+        ];
+      }
+      return [{ protocol: "https", hostname: trimmed }];
+    }),
     formats: ["image/avif", "image/webp"],
   },
   experimental: {

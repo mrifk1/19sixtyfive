@@ -30,31 +30,13 @@ export async function GET(request: Request) {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-          <div
-            style={{
-              width: "72px",
-              height: "72px",
-              borderRadius: "50%",
-              background: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <span
-              style={{
-                color: "#000",
-                fontSize: "42px",
-                fontWeight: 700,
-                textTransform: "uppercase",
-              }}
-            >
-              65
-            </span>
-          </div>
-          <span style={{ fontSize: "32px", letterSpacing: "4px" }}>
-            {siteConfig.domain}
-          </span>
+          <img
+            src={`${siteConfig.url}/images/logo/logo-white.svg`}
+            alt="19sixtyfive"
+            width="180"
+            height="130"
+            style={{ objectFit: "contain" }}
+          />
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
           <h1

@@ -111,9 +111,7 @@ export default async function ProjectDetailPage({
     if (fetchedDetail) {
       detailProj = fetchedDetail;
     }
-  } catch (error) {
-    // If fetching detail fails, continue using the original project
-    console.error('Failed to fetch project detail by ID, using original proj:', error);
+  } catch {
   }
 
   const ordered = orderProjects(list);
@@ -253,6 +251,34 @@ export default async function ProjectDetailPage({
         className={styles.bannerSection}
         style={{ backgroundImage: `url(${banner})` }}
       />
+
+      {/* ===== YouTube Video ===== */}
+      {detailProj.youtube_embed_url && (() => {
+        const url = detailProj.youtube_embed_url;
+        let videoId: string | null = null;
+
+        if (url.includes("youtu.be/")) {
+          videoId = url.split("youtu.be/")[1]?.split("?")[0] || null;
+        } else if (url.includes("youtube.com/watch?v=")) {
+          videoId = url.split("v=")[1]?.split("&")[0] || null;
+        } else if (url.includes("youtube.com/embed/")) {
+          videoId = url.split("embed/")[1]?.split("?")[0] || null;
+        }
+
+        return videoId ? (
+          <section className={styles.videoSection}>
+            <div className={styles.videoContainer}>
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            </div>
+          </section>
+        ) : null;
+      })()}
 
       {/* ===== Gallery (4 per row, same sizing rule) ===== */}
       {rows.length ? (

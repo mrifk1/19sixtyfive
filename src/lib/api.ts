@@ -1,4 +1,3 @@
-// src/lib/api.ts
 import type {
   CollectionItem,
   CollectionKind,
@@ -8,30 +7,56 @@ import type {
   BrandProject,
   NewsItem,
 } from "@/types";
-import {
-  getRequiredServerEnvVar,
-  isProduction,
-  sanitizePathInput,
-  sanitizeUrl,
-} from "@/lib/env";
+import { sanitizePathInput } from "@/lib/env";
+import { 
+  getBackendUrl, 
+  getApiPath,
+  isProductionMode,
+  API_CONFIG 
+} from "@/config/api";
 
 if (typeof window !== "undefined") {
-  throw new Error("api utilities can only be used on the server");
+  throw new Error("API utilities can only be used on the server");
 }
 
-/**
- * Env
- * - API_BASE_URL=https://wp.19sixtyfive.com.sg/wp-json/custom/v1
- * - API_KEY=xxxxx
- */
-const RAW_BASE_URL = getRequiredServerEnvVar("API_BASE_URL");
-const BASE_URL = sanitizeUrl(RAW_BASE_URL, "API_BASE_URL");
-const API_KEY = getRequiredServerEnvVar("API_KEY");
-const isProd = isProduction();
+const isProd = isProductionMode();
 
-/* ==============================
- * Utils
- * ============================== */
+type GetOpts = { revalidate?: number; tags?: string[]; isMobile?: boolean };
+
+function buildUrl(path: string, isMobile: boolean): string {
+  if (path.startsWith("http")) {
+    const url = new URL(path);
+    url.searchParams.set("device", isMobile ? "mobile" : "desktop");
+    return url.toString();
+  }
+  const normalized = sanitizePathInput(path);
+  const url = new URL(getBackendUrl());
+  url.searchParams.set("rest_route", `${getApiPath()}${normalized}`);
+  url.searchParams.set("device", isMobile ? "mobile" : "desktop");
+  return url.toString();
+}
+
+export async function apiGet<T>(path: string, opts: GetOpts = {}): Promise<T> {
+  const { 
+    revalidate = API_CONFIG.cache.defaultRevalidate, 
+    tags = [], 
+    isMobile = false 
+  } = opts;
+  const finalUrl = buildUrl(path, isMobile);
+
+  const res = await fetch(finalUrl, {
+    method: "GET",
+    headers: { Accept: "application/json" },
+    next: isProd ? { revalidate, tags } : { revalidate: 0 },
+    cache: isProd ? "force-cache" : "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error(`GET ${finalUrl} failed: ${res.status} ${res.statusText}`);
+  }
+  return res.json() as Promise<T>;
+}
+
 export function slugify(input?: string | null): string {
   return (input ?? "")
     .toString()
@@ -47,7 +72,6 @@ export function isMobileDevice(userAgent?: string): boolean {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
 }
 
-// Server-side helper to detect mobile from Next.js headers
 export async function isMobileFromHeaders(): Promise<boolean> {
   try {
     const { headers } = await import('next/headers');
@@ -59,49 +83,13 @@ export async function isMobileFromHeaders(): Promise<boolean> {
   }
 }
 
-/* ==============================
- * Fetch wrapper (ISR + Tag-based)
- * ============================== */
-type GetOpts = { revalidate?: number; tags?: string[]; isMobile?: boolean };
-
-function buildUrl(path: string, isMobile: boolean): string {
-  if (path.startsWith("http")) {
-    const url = new URL(path);
-    url.searchParams.set("device", isMobile ? "mobile" : "desktop");
-    return url.toString();
-  }
-  const normalized = sanitizePathInput(path);
-  const url = new URL(`${BASE_URL}${normalized}`);
-  url.searchParams.set("device", isMobile ? "mobile" : "desktop");
-  return url.toString();
-}
-
-export async function apiGet<T>(path: string, opts: GetOpts = {}): Promise<T> {
-  const { revalidate = 3600, tags = [], isMobile = false } = opts; // default 1h
-  const finalUrl = buildUrl(path, isMobile);
-
-  const res = await fetch(finalUrl, {
-    method: "GET",
-    headers: { Accept: "application/json", "X-API-Key": API_KEY },
-    // Dev: always fresh; Prod: ISR + Tags
-    next: isProd ? { revalidate, tags } : { revalidate: 0 },
-    cache: isProd ? "force-cache" : "no-store",
-  });
-
-  if (!res.ok) {
-    throw new Error(`GET ${finalUrl} failed: ${res.status} ${res.statusText}`);
-  }
-  return res.json() as Promise<T>;
-}
-
-/* ==============================
- * Collections (festival/community/artist/sport)
- * ============================== */
 const KIND_MAP: Record<string, CollectionKind> = {
-  festival: "festival",
+  festivals: "festivals",
+  festival: "festivals",
   community: "community",
-  artist: "artist",  sport: "sport",
-  sports: "sport", // alias
+  artist: "artist",
+  sports: "sports",
+  sport: "sports",
 };
 
 export function asKind(s: string): CollectionKind | null {
@@ -329,16 +317,11 @@ export async function getCollectionItemById(
       isMobile,
     });
     return data;
-  } catch (error) {
-    console.error(`Failed to fetch ${kind} detail for ID ${id}:`, error);
+  } catch {
     return null;
   }
 }
 
-/**
- * Fetch brand project detail by ID
- * This will call the detail endpoint which increments the view count in the backend
- */
 export async function getBrandProjectById(
   projectId: string,
   isMobile: boolean = false
@@ -350,8 +333,7 @@ export async function getBrandProjectById(
       isMobile,
     });
     return data;
-  } catch (error) {
-    console.error(`Failed to fetch brand project detail for ID ${projectId}:`, error);
-    return null;
+  } catch { 
+    return null;    
   }
 }

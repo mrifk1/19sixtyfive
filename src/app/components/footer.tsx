@@ -20,7 +20,7 @@ export default function Footer() {
       <div className={styles.column1}>
         <ul className={`${styles.list} ${styles.left}`}>
           <li>
-            <Link href="/festival">Festivals</Link>
+            <Link href="/festivals">Festivals</Link>
           </li>
           <li>
             <Link href="/community">Community</Link>
@@ -80,9 +80,9 @@ export default function Footer() {
           </a>
         </li>
         <li>
-          {/* <a href="https://tangentmoves.sg/" target="_blank" rel="noopener noreferrer">
+          <a href="https://tangentmoves.sg/" target="_blank" rel="noopener noreferrer">
             tangentmoves.sg
-          </a> */}
+          </a>
         </li>
       </ul>
     </footer>

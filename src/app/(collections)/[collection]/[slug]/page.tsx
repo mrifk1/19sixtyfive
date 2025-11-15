@@ -92,18 +92,13 @@ export default async function DetailPage({
   ]);
   if (!item) return notFound();
 
-  // Fetch detail by ID to increment the view count in the backend
-  // We still use the item from getItemBySlug as a fallback,
-  // but try fetching the detail by ID to update the view count
   let detailItem = item;
   try {
     const fetchedDetail = await getCollectionItemById(kind, item.id, isMobile);
     if (fetchedDetail) {
       detailItem = fetchedDetail;
     }
-  } catch (error) {
-    // If fetching detail fails, continue using the original item
-    console.error('Failed to fetch detail by ID, using original item:', error);
+  } catch {
   }
 
   const ordered = orderByDisplay(list);
@@ -234,6 +229,45 @@ export default async function DetailPage({
         className={styles.bannerSection}
         style={{ backgroundImage: `url(${banner})` }}
       />
+
+      {detailItem.youtube_embed_url && (() => {
+        const url = detailItem.youtube_embed_url;
+        let videoId = '';
+        
+        if (url.includes('youtu.be/')) {
+          const parts = url.split('youtu.be/')[1];
+          videoId = parts?.split('?')[0]?.split('/')[0] || '';
+        } else if (url.includes('youtube.com/watch')) {
+          try {
+            const urlObj = new URL(url);
+            videoId = urlObj.searchParams.get('v') || '';
+          } catch {
+            const match = url.match(/[?&]v=([^&]+)/);
+            videoId = match?.[1] || '';
+          }
+        } else if (url.includes('youtube.com/embed/')) {
+          videoId = url.split('youtube.com/embed/')[1]?.split('?')[0] || '';
+        }
+        
+        if (!videoId) return null;
+        
+        return (
+          <section className={styles.videoSection}>
+            <div className={styles.videoContainer}>
+              <iframe
+                width="100%"
+                height="100%"
+                src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            </div>
+          </section>
+        );
+      })()}
 
       {rows.length ? (
         <section className={styles.gallery} id="community-detail-section">

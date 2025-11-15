@@ -36,7 +36,7 @@ const UI: Record<
     variant: "frameWhite" | "frameBlack";
   }
 > = {
-  festival: {
+  festivals: {
     titleLines: ["Common ground:", "Festivals, flipped our way."],
     iconLabel: "Festivals",
     subtitle:
@@ -60,7 +60,7 @@ const UI: Record<
     frameClass: "frameArtist",
     variant: "frameWhite",
   },
-  sport: {
+  sports: {
     titleLines: ["Sports:", "Energy in motion."],
     iconLabel: "Sports",
     subtitle:

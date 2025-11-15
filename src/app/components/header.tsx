@@ -125,7 +125,7 @@ export default function Header() {
         <nav aria-label="Site menu">
           <ul>
             <li>
-              <Link href="/festival" onClick={() => setMenuOpen(false)}>
+              <Link href="/festivals" onClick={() => setMenuOpen(false)}>
                 Festivals
               </Link>
             </li>

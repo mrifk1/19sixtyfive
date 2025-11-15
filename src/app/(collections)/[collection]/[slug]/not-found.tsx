@@ -8,8 +8,8 @@ export default function NotFound() {
   const pathname = usePathname();
 
   let backUrl = "/";
-  if (pathname.startsWith("/festival")) {
-    backUrl = "/festival";
+  if (pathname.startsWith("/festivals")) {
+    backUrl = "/festivals";
   } else if (pathname.startsWith("/community")) {
     backUrl = "/community";
   } else if (pathname.startsWith("/sports")) {

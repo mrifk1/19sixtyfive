@@ -1,6 +1,12 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+const CSP_SOURCES = {
+  backend: process.env.API_BASE_URL,
+  youtube: "https://www.youtube.com https://www.youtube-nocookie.com",
+  youtubeImg: "https://i.ytimg.com",
+};
+
 const shouldBypass = (pathname: string) =>
   pathname.startsWith("/_next") ||
   pathname.startsWith("/api") ||
@@ -12,20 +18,24 @@ const shouldBypass = (pathname: string) =>
   pathname.endsWith(".ico") ||
   pathname.startsWith("/videos/");
 
-const createContentSecurityPolicy = (nonce: string) =>
-  [
+const createContentSecurityPolicy = (nonce: string) => {
+  const isDev = process.env.NODE_ENV !== "production";
+  
+  return [
     "default-src 'self'",
-    `script-src 'self' 'strict-dynamic' 'nonce-${nonce}'`,
+    `script-src 'self' 'strict-dynamic' 'nonce-${nonce}'${isDev ? " 'unsafe-eval'" : ""}`,
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: https://wp.19sixtyfive.com.sg",
+    `img-src 'self' data: ${CSP_SOURCES.backend} ${CSP_SOURCES.youtubeImg}`,
     "font-src 'self' data:",
-    "connect-src 'self' https://wp.19sixtyfive.com.sg",
-    "media-src 'self' https://wp.19sixtyfive.com.sg",
+    `connect-src 'self' ${CSP_SOURCES.backend}`,
+    `media-src 'self' ${CSP_SOURCES.backend}`,
+    `frame-src ${CSP_SOURCES.youtube}`,
     "object-src 'none'",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
   ].join("; ");
+};
 
 export function middleware(request: NextRequest) {
   const start = Date.now();
@@ -36,6 +46,7 @@ export function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-request-id", requestId);
   requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("x-pathname", request.nextUrl.pathname);
 
   const response = NextResponse.next({
     request: {
