@@ -29,7 +29,7 @@ const UI: Record<
     iconLabel?: string; // <— optional
     subtitle: string;
     frameClass:
-      | "frameFestival"
+      | "frameFestivals"
       | "frameCommunity"
       | "frameArtist"
       | "frameSports";
@@ -41,7 +41,7 @@ const UI: Record<
     iconLabel: "Festivals",
     subtitle:
       "We don’t just build festivals — we build movements, moments and the kind of subculture people want to belong to.",
-    frameClass: "frameFestival",
+    frameClass: "frameFestivals",
     variant: "frameWhite",
   },
   community: {
